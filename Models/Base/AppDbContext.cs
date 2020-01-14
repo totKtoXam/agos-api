@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace AGoS_api.Models.Base
+namespace agos_api.Models.Base
 {
     public class AppDbContext : DbContext
     {
@@ -14,5 +14,6 @@ namespace AGoS_api.Models.Base
             
    
         public DbSet<Speciality> Specialitys { get; set; }
+        public DbSet<Otdel> Otdels { get; set; }
     }
 }

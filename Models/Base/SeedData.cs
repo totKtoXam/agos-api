@@ -6,9 +6,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using AGoS_api.Models.Base;
+using agos_api.Models.Base;
 
-namespace AGoS_api.Models.Base
+namespace agos_api.Models.Base
 {
     public class SeedData
     {

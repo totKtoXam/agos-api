@@ -1,4 +1,4 @@
-namespace AGoS_api.Models
+namespace agos_api.Models
 {
     public class Speciality
     {

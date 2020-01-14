@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using AGoS_api.Models;
-using AGoS_api.Models.Base;
+using agos_api.Models;
+using agos_api.Models.Base;
 using System.Threading.Tasks;
  
-namespace WebAPIApp.Controllers
+namespace agos_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using AGoS_api.Models.Base;
+using agos_api.Models.Base;
 
-namespace AGoS_api
+namespace agos_api
 {
     public class Startup
     {

@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using AGoS_api.Models.Base;
+using agos_api.Models.Base;
 
-namespace AGoS_api
+namespace agos_api
 {
     public class Program
     {
