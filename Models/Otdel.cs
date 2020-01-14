@@ -5,5 +5,4 @@ namespace agos_api.Models
         public int OtdelId { get; set; }
         public string OtdelName { get; set; }
     }
-} 
-// пидор
+}
