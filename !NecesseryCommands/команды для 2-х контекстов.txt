@@ -1,0 +1,11 @@
+﻿добавление миграции
+dotnet ef migrations add <name of Migration> --context <name of Context>
+
+обновление базы
+dotnet ef database update --context <name of Context>
+
+откат базы
+dotnet ef database update <name of Migration> --context <name of Context>
+
+удалнеие миграции
+dotnet ef migrations remove --context <name of Context>
