@@ -1,0 +1,9 @@
+dotnet new mvc
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 2.1.2
+dotnet build
+
+dotnet ef database update
+dotnet ef migrations add AddProductReviews
+dotnet ef migrations remove
+dotnet ef database update LastGoodMigration
+dotnet ef migrations script
