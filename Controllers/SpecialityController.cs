@@ -9,31 +9,32 @@ using System.Threading.Tasks;
 namespace agos_api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("/[controller]/")]
     public class SpecialityController : ControllerBase
     {
         AppDbContext db;
         public SpecialityController(AppDbContext context)
         {
             db = context;
-            if (!db.Specialitys.Any())
-            {
-                db.Specialitys.Add(new Speciality { Speciality_Name = "Программирование", Speciality_Classifier = "12548" });
-                db.Specialitys.Add(new Speciality { Speciality_Name = "Операционные системы и пакет прикладных программ", 
-                    Speciality_Classifier = "16448" });
-                db.SaveChanges();
-            }
         }
  
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Speciality>>> Get()
+        [HttpPost("/insert")]
+        public async Task<IActionResult> InsertSpeciality([FromBody] Speciality model)
+        {
+            db.Specialitys.Add(model);
+            await db.SaveChangesAsync();
+            return Ok(model);
+        }
+
+        [HttpGet("/getall")]
+        public async Task<ActionResult<IEnumerable<Speciality>>> GetAllSpecialitys()
         {
             return await db.Specialitys.ToListAsync();
         }
  
         // GET api/users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Speciality>> Get(int id)
+        [HttpGet("/getsingle/{id}")]
+        public async Task<ActionResult<Speciality>> GetSingleSpeciality(int id)
         {
             Speciality speciality = await db.Specialitys.FirstOrDefaultAsync(x => x.SpecialityId == id);
             if (speciality == null)
@@ -41,41 +42,27 @@ namespace agos_api.Controllers
             return new ObjectResult(speciality);
         }
  
-        // POST api/users
-        [HttpPost]
-        public async Task<ActionResult<Speciality>> Post(Speciality speciality)
-        {
-            if (speciality == null)
-            {
-                return BadRequest();
-            }
- 
-            db.Specialitys.Add(speciality);
-            await db.SaveChangesAsync();
-            return Ok(speciality);
-        }
- 
         // PUT api/users/
-        [HttpPut]
-        public async Task<ActionResult<Speciality>> Put(Speciality speciality)
+        [HttpPut("/update")]
+        public async Task<ActionResult<Speciality>> UpdateSpeciality([FromBody] Speciality model)
         {
-            if (speciality == null)
+            if (model == null)
             {
                 return BadRequest();
             }
-            if (!db.Specialitys.Any(x => x.SpecialityId ==speciality.SpecialityId))
+            if (!db.Specialitys.Any(x => x.SpecialityId == model.SpecialityId))
             {
                 return NotFound();
             }
  
-            db.Update(speciality);
+            db.Update(model);
             await db.SaveChangesAsync();
-            return Ok(speciality);
+            return Ok(model);
         }
  
         // DELETE api/users/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Speciality>> Delete(int id)
+        [HttpDelete("/delete/{id}")]
+        public async Task<ActionResult<Speciality>> DeleteSpeciality(int id)
         {
             Speciality speciality = db.Specialitys.FirstOrDefault(x => x.SpecialityId == id);
             if (speciality == null)
