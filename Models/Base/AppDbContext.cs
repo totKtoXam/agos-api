@@ -1,23 +1,29 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using agos_api.Models.Users;
 
 namespace agos_api.Models.Base
 {
-    public class AppDbContext : IdentityDbContext<User>
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 
-         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
-             optionsBuilder.EnableSensitiveDataLogging();
-         }
+         protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
             
    
+        #region USERS
+            public DbSet<Teacher> Teachers { get; set; }
+            public DbSet<devUser> devUsers { get; set; }
+        #endregion
+
         public DbSet<Group> Groups { get; set; }
         public DbSet<Otdel> Otdels { get; set; }
         public DbSet<Speciality> Specialitys { get; set; }
         public DbSet<SpecialityOtdel> SpecialityOtdels { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
     }
 }

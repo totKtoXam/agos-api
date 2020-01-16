@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace agos_api.Models.Base
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }
         public string Surname { get; set; }

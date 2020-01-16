@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using agos_api.Models.Base;
 
 namespace agos_api
@@ -30,7 +31,11 @@ namespace agos_api
             string connect = Configuration["ConnectionStrings:DefaultConnection"];
 
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect));
-
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+            
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
             services.AddControllers();
         }
 
