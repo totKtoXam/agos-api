@@ -54,16 +54,16 @@ namespace agos_api.Models.Base
                 chiefAdminCreated.Wait();
                 var chiefAdminRole = userManager.AddToRoleAsync(chiefAdmin, "admin");
                 chiefAdminRole.Wait();
+            }
 
-            }
             var opExisting = _dbContext.Users.Find(chiefAdmin.Id);
-            if (opExisting == null)
-            {
-                var opNew = new devUser(chiefAdmin);
-                _dbContext.devUsers.Add(opNew);
-                var opSave = _dbContext.SaveChangesAsync();
-                opSave.Wait();
-            }
+                if (opExisting != null)
+                {
+                    var opNew = new devUser(chiefAdmin);
+                    _dbContext.devUsers.Add(opNew);
+                    var opSave = _dbContext.SaveChangesAsync();
+                    opSave.Wait();
+                }
         }
     }
 }
