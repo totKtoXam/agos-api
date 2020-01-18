@@ -21,8 +21,12 @@ namespace agos_api.Models.Base
             public DbSet<devUser> devUsers { get; set; }
         #endregion
 
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<Otdel> Otdels { get; set; }
+        #region Organizations
+            public DbSet<StudyOrganization> StudyOrganizations { get; set; }
+            public DbSet<Group> Groups { get; set; }
+            public DbSet<Otdel> Otdels { get; set; }
+        #endregion
+        
         public DbSet<Speciality> Specialitys { get; set; }
         public DbSet<SpecialityOtdel> SpecialityOtdels { get; set; }
     }

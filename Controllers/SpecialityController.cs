@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace agos_api.Controllers
 {
     [ApiController]
-    [Route("/[controller]/")]
+    [Route("api/[controller]/")]
     public class SpecialityController : ControllerBase
     {
         AppDbContext db;
@@ -18,23 +18,23 @@ namespace agos_api.Controllers
             db = context;
         }
  
-        [HttpPost("/insert")]
-        public async Task<IActionResult> InsertSpeciality([FromBody] Speciality model)
+        [HttpPost("insert")]
+        public async Task<IActionResult> InsertRecordAsync([FromBody] Speciality model)
         {
             db.Specialitys.Add(model);
             await db.SaveChangesAsync();
             return Ok(model);
         }
 
-        [HttpGet("/getall")]
-        public async Task<ActionResult<IEnumerable<Speciality>>> GetAllSpecialitys()
+        [HttpGet("getall")]
+        public async Task<ActionResult<IEnumerable<Speciality>>> GetAllRecordsAsyns()
         {
             return await db.Specialitys.ToListAsync();
         }
  
         // GET api/users/5
-        [HttpGet("/getsingle/{id}")]
-        public async Task<ActionResult<Speciality>> GetSingleSpeciality(int id)
+        [HttpGet("getsingle/{id}")]
+        public async Task<ActionResult<Speciality>> GetSingleRecordAsync(int id)
         {
             Speciality speciality = await db.Specialitys.FirstOrDefaultAsync(x => x.SpecialityId == id);
             if (speciality == null)
@@ -43,8 +43,8 @@ namespace agos_api.Controllers
         }
  
         // PUT api/users/
-        [HttpPut("/update")]
-        public async Task<ActionResult<Speciality>> UpdateSpeciality([FromBody] Speciality model)
+        [HttpPut("update")]
+        public async Task<ActionResult<Speciality>> UpdateRecordAsync([FromBody] Speciality model)
         {
             if (model == null)
             {
@@ -61,8 +61,8 @@ namespace agos_api.Controllers
         }
  
         // DELETE api/users/5
-        [HttpDelete("/delete/{id}")]
-        public async Task<ActionResult<Speciality>> DeleteSpeciality(int id)
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult<Speciality>> DeleteRecordAsync(int id)
         {
             Speciality speciality = db.Specialitys.FirstOrDefault(x => x.SpecialityId == id);
             if (speciality == null)
