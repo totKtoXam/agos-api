@@ -4,11 +4,7 @@ namespace agos_api.Models.Users
 {
     public class devUser
     {
-        public devUser(
-
-        ){
-      
-        }
+        public devUser(){}
         public devUser(ApplicationUser _user)
         {
             Id = _user.Id;

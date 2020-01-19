@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using agos_api.Models.Users;
+using agos_api.Models.Organizations;
+using agos_api.Models.UsersOrg;
+
 
 namespace agos_api.Models.Base
 {
@@ -25,6 +28,7 @@ namespace agos_api.Models.Base
             public DbSet<StudyOrganization> StudyOrganizations { get; set; }
             public DbSet<Group> Groups { get; set; }
             public DbSet<Otdel> Otdels { get; set; }
+            public DbSet<UserOrganization> UserOrganizations { get; set; }
         #endregion
         
         public DbSet<Speciality> Specialitys { get; set; }

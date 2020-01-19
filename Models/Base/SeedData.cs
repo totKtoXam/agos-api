@@ -23,14 +23,12 @@ namespace agos_api.Models.Base
 
             var roleList = new List<string>()
             {
-                "admin", "helper", "guest"
+                "devAdmin", "admin", "helper", "guest"
             };
             var roles = roleManager.Roles.Select(x => x.Name).ToList();
-            // Сравнивает списки и разницу добавляет в БД
             var roleDiff = roleList.Except(roles).ToList();
             if (roleDiff.Count() > 0)
             {
-                // Связывает роли с входной группой
                 foreach (var item in roleDiff)
                 {
                     var role = new IdentityRole { Name = item };
@@ -50,9 +48,9 @@ namespace agos_api.Models.Base
                     Name = "chiefAdmin",
                     EmailConfirmed = true
                 };
-                var chiefAdminCreated = userManager.CreateAsync(chiefAdmin, "P@ssw0rd");
+                var chiefAdminCreated = userManager.CreateAsync(chiefAdmin, "@G0Sik");
                 chiefAdminCreated.Wait();
-                var chiefAdminRole = userManager.AddToRoleAsync(chiefAdmin, "admin");
+                var chiefAdminRole = userManager.AddToRoleAsync(chiefAdmin, "devAdmin");
                 chiefAdminRole.Wait();
             }
 

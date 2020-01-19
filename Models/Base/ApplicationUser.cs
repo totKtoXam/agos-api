@@ -16,12 +16,16 @@ namespace agos_api.Models.Base
         }
     #endregion
 
-    #region Register View Model
+    #region RegisterViewModel
         public class RegisterViewModel
         {
             [Required]
             [Display(Name = "E-mail")]
-            public string email { get; set; }
+            public string Email { get; set; }
+
+            [Required]
+            [Display(Name = "Логин")]
+            public string Login { get; set; }
 
             [Required]
             [Display(Name = "Имя")]
@@ -33,6 +37,9 @@ namespace agos_api.Models.Base
             
             [Display(Name = "Отчество")]
             public string Middlename { get; set; }
+
+            [Display(Name = "Роль")]
+            public string RoleName { get; set; }
 
             [Required]
             [DataType(DataType.Password)]

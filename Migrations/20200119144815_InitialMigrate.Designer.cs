@@ -10,8 +10,8 @@ using agos_api.Models.Base;
 namespace AGoS_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200118071815_NewModelStudyOrganizations")]
-    partial class NewModelStudyOrganizations
+    [Migration("20200119144815_InitialMigrate")]
+    partial class InitialMigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -248,7 +248,7 @@ namespace AGoS_api.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Group", b =>
+            modelBuilder.Entity("agos_api.Models.Organizations.Group", b =>
                 {
                     b.Property<long>("GroupId")
                         .ValueGeneratedOnAdd()
@@ -377,6 +377,21 @@ namespace AGoS_api.Migrations
                     b.ToTable("devUsers");
                 });
 
+            modelBuilder.Entity("agos_api.Models.UsersOrg.AdminOrganization", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AdminOrganizations");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -428,7 +443,7 @@ namespace AGoS_api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("agos_api.Models.Group", b =>
+            modelBuilder.Entity("agos_api.Models.Organizations.Group", b =>
                 {
                     b.HasOne("agos_api.Models.SpecialityOtdel", "SpecialityOtdel")
                         .WithMany()
@@ -447,6 +462,13 @@ namespace AGoS_api.Migrations
                 });
 
             modelBuilder.Entity("agos_api.Models.Users.devUser", b =>
+                {
+                    b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("agos_api.Models.UsersOrg.AdminOrganization", b =>
                 {
                     b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
                         .WithMany()
