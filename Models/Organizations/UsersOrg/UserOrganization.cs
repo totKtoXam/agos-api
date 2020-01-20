@@ -5,14 +5,15 @@ namespace agos_api.Models.UsersOrg
     public class UserOrganization
     {
         public UserOrganization(){}
-        public UserOrganization(ApplicationUser _user)
+        public UserOrganization(ApplicationUser _user, StudyOrganization _studyOrganization)
         {
             Id = _user.Id;
             User = _user;
+            studyOrganization = _studyOrganization;
         }
 
         public string Id { get; set; }
         public ApplicationUser User { get; set; }
-        // public StudyOrganization studyOrganization { get; set; }
+        public StudyOrganization studyOrganization { get; set; }
     }
 }

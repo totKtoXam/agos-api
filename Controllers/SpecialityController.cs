@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using agos_api.Models;
 using agos_api.Models.Base;
 using System.Threading.Tasks;
- 
+using Microsoft.AspNetCore.Authorization;
+
 namespace agos_api.Controllers
 {
     [ApiController]
@@ -17,7 +18,7 @@ namespace agos_api.Controllers
         {
             db = context;
         }
- 
+
         [HttpPost("insert")]
         public async Task<IActionResult> InsertRecordAsync([FromBody] Speciality model)
         {
