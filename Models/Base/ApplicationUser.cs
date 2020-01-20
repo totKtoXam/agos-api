@@ -1,9 +1,11 @@
+using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace agos_api.Models.Base
 {
-    #region  App User
+    #region  AppUser
         public class ApplicationUser : IdentityUser
         {
             public string Name { get; set; }
@@ -19,13 +21,10 @@ namespace agos_api.Models.Base
     #region RegisterViewModel
         public class RegisterViewModel
         {
+            [EmailAddress (ErrorMessage = "Некорректный адрес")]
             [Required]
             [Display(Name = "E-mail")]
             public string Email { get; set; }
-
-            [Required]
-            [Display(Name = "Логин")]
-            public string Login { get; set; }
 
             [Required]
             [Display(Name = "Имя")]
@@ -52,9 +51,35 @@ namespace agos_api.Models.Base
             [Display(Name = "Подтверждение пароля")]
             public string PasswordConfirm { get; set; }
 
-            // [Required]
-            // [Display("Учебная организация")]
-            // public
+            [Required]
+            [Display(Name = "Учебная организация")]
+            public int studyOrganizationId { get; set; }
+        }
+    #endregion
+
+    #region LogInViewModel
+    public class LogInViewModel
+    {
+        [EmailAddress (ErrorMessage = "Некорректный адрес")]
+        [Display(Name = "E-mail")]
+        public string Email { get; set; }
+        
+        [Required]
+        [Display(Name = "Пароль")]
+        public string Password { get; set; }
+    }
+    #endregion
+
+    #region JwtToken
+        public class RefreshToken
+        {
+            public RefreshToken(){}
+            public RefreshToken(string _id){ Id = _id; }
+            public string Id { get; set; } // = AppUser.Id
+            public string Token { get; set; }
+            public bool Revoked { get; set; }
+            public DateTime StartDate { get; set; } // = CreatedDate
+            public DateTime FinishDate { get; set; } // = ExpireDate
         }
     #endregion
 }

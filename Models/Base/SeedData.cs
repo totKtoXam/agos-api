@@ -21,47 +21,77 @@ namespace agos_api.Models.Base
 
             _dbContext.Database.EnsureCreated();
 
-            var roleList = new List<string>()
-            {
-                "devAdmin", "admin", "helper", "guest"
-            };
-            var roles = roleManager.Roles.Select(x => x.Name).ToList();
-            var roleDiff = roleList.Except(roles).ToList();
-            if (roleDiff.Count() > 0)
-            {
-                foreach (var item in roleDiff)
+            #region  Roles
+                var roleList = new List<string>()
                 {
-                    var role = new IdentityRole { Name = item };
-                    var t = roleManager.CreateAsync(role);
-                    t.Wait();
-                }
-            }
-            
-            var chiefAdmin = userManager.Users.FirstOrDefault(x => x.UserName == "agos.vb@gmail.com");
-            if (chiefAdmin == null)
-            {
-                chiefAdmin = new ApplicationUser
-                {
-                    Email = "agos.vb@gmail.com",
-                    UserName = "chiefAdmin",
-                    Surname = "chiefAdmin",
-                    Name = "chiefAdmin",
-                    EmailConfirmed = true
+                    "devAdmin", "admin", "helper", "guest"
                 };
-                var chiefAdminCreated = userManager.CreateAsync(chiefAdmin, "@G0Sik");
-                chiefAdminCreated.Wait();
-                var chiefAdminRole = userManager.AddToRoleAsync(chiefAdmin, "devAdmin");
-                chiefAdminRole.Wait();
-            }
-
-            var opExisting = _dbContext.Users.Find(chiefAdmin.Id);
-                if (opExisting != null)
+                var roles = roleManager.Roles.Select(x => x.Name).ToList();
+                var roleDiff = roleList.Except(roles).ToList();
+                if (roleDiff.Count() > 0)
                 {
-                    var opNew = new devUser(chiefAdmin);
-                    _dbContext.devUsers.Add(opNew);
-                    var opSave = _dbContext.SaveChangesAsync();
-                    opSave.Wait();
+                    foreach (var item in roleDiff)
+                    {
+                        var role = new IdentityRole { Name = item };
+                        var t = roleManager.CreateAsync(role);
+                        t.Wait();
+                    }
                 }
+            #endregion
+            
+            #region WeekDays
+                // var dayRusList = new List<string>()
+                // {
+                //     "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"
+                // };
+                // var dayEngList = new List<string>()
+                // {
+                //     "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"
+                // };
+                // var dayKzList = new List<string>()
+                // {
+                //     "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"
+                // };
+                // var daysFullName = _dbContext.WeekDays.Select(x => x.DayFullName).ToList();
+                // var daysDiff = roleList.Except(roles).ToList();
+                // if (roleDiff.Count() > 0)
+                // {
+                //     foreach (var item in roleDiff)
+                //     {
+                //         var role = new IdentityRole { Name = item };
+                //         var t = roleManager.CreateAsync(role);
+                //         t.Wait();
+                //     }
+                // }
+            #endregion
+
+            #region devUsers
+                var chiefAdmin = userManager.Users.FirstOrDefault(x => x.UserName == "agos.vb@gmail.com");
+                if (chiefAdmin == null)
+                {
+                    chiefAdmin = new ApplicationUser
+                    {
+                        Email = "agos.vb@gmail.com",
+                        UserName = "agos.vb@gmail.com",
+                        Surname = "devAdmin",
+                        Name = "devAdmin",
+                        EmailConfirmed = true
+                    };
+                    var chiefAdminCreated = userManager.CreateAsync(chiefAdmin, "@G0Sik");
+                    chiefAdminCreated.Wait();
+                    var chiefAdminRole = userManager.AddToRoleAsync(chiefAdmin, "devAdmin");
+                    chiefAdminRole.Wait();
+                }
+
+                var opExisting = _dbContext.Users.Find(chiefAdmin.Id);
+                    if (opExisting != null)
+                    {
+                        var opNew = new devUser(chiefAdmin);
+                        _dbContext.devUsers.Add(opNew);
+                        var opSave = _dbContext.SaveChangesAsync();
+                        opSave.Wait();
+                    }
+            #endregion
         }
     }
 }

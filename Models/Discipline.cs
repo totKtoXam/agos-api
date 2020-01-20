@@ -1,3 +1,5 @@
+using agos_api.Models.StaticData;
+
 namespace agos_api.Models
 {
     public class Discipline 

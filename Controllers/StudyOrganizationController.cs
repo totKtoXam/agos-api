@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using agos_api.Models;
 using agos_api.Models.Base;
 using System.Threading.Tasks;
+using agos_api.Helpers;
 
 namespace agos_api.Controllers
 {
@@ -17,28 +18,22 @@ namespace agos_api.Controllers
         {
             db = context;
         }
-
-        public string KeyGenerate(int StudyOrganizationId, string ShortName, string City)
-        {
-            return (StudyOrganizationId).ToString() + "-" + ShortName + "-" + City;
-        }
  
         [HttpPost("insert")]
         public async Task<IActionResult> InsertRecordAsyns([FromBody] StudyOrganization model)
         {
-            db.StudyOrganizations.Add(model);
+            var studyOrganization = new StudyOrganization(model);
+            db.StudyOrganizations.Add(studyOrganization);
             await db.SaveChangesAsync();
-            StudyOrganization studyOrganization = db.StudyOrganizations.OrderByDescending(x => x.StudyOrganizationId).FirstOrDefault();
-            model.Key = KeyGenerate(
-                    studyOrganization.StudyOrganizationId, 
-                    studyOrganization.ShortName, 
-                    studyOrganization.City
+            StudyOrganization _studyOrganization = db.StudyOrganizations.OrderByDescending(x => x.StudyOrganizationId).FirstOrDefault();
+            _studyOrganization.Key = StudyOrganizationHelper.KeyGenerate(
+                    _studyOrganization.StudyOrganizationId, 
+                    _studyOrganization.ShortName, 
+                    _studyOrganization.City
                 );
-
-            db.Update(model);
+            db.Update(_studyOrganization);
             await db.SaveChangesAsync();
-            return Ok(model);
-
+            return Ok(studyOrganization);
         }
 
         [HttpGet("getall")]
