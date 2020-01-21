@@ -21,8 +21,8 @@ namespace agos_api.Models.Base
     #region RegisterViewModel
         public class RegisterViewModel
         {
-            [EmailAddress (ErrorMessage = "Некорректный адрес")]
             [Required]
+            [EmailAddress (ErrorMessage = "Некорректный адрес")]
             [Display(Name = "E-mail")]
             public string Email { get; set; }
 

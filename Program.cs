@@ -19,7 +19,7 @@ namespace agos_api
             using (var scope = host.Services.CreateScope())
             {
                 var _services = scope.ServiceProvider;
-                var _context = _services.GetRequiredService<AppDbContext>();
+                var _context = _services.GetRequiredService<AppDbContext>();    
 
                 try
                 {

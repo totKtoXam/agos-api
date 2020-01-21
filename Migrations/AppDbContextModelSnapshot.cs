@@ -352,6 +352,21 @@ namespace AGoS_api.Migrations
                     b.ToTable("SpecialityOtdels");
                 });
 
+            modelBuilder.Entity("agos_api.Models.StaticData.WeekDay", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("DayName")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("WeekDays");
+                });
+
             modelBuilder.Entity("agos_api.Models.StudyOrganization", b =>
                 {
                     b.Property<int>("StudyOrganizationId")
@@ -372,6 +387,9 @@ namespace AGoS_api.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("OfficialName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
                         .HasColumnType("text");
 
                     b.Property<string>("ShortName")
@@ -402,10 +420,15 @@ namespace AGoS_api.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudyOrganizationId");
 
                     b.HasIndex("UserId");
 
@@ -490,6 +513,10 @@ namespace AGoS_api.Migrations
 
             modelBuilder.Entity("agos_api.Models.UsersOrg.UserOrganization", b =>
                 {
+                    b.HasOne("agos_api.Models.StudyOrganization", "studyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
+
                     b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Identity;
 using agos_api.Models.Base;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using System.Text;
 
 namespace agos_api
@@ -32,37 +34,42 @@ namespace agos_api
         public void ConfigureServices(IServiceCollection services)
         {
             string connect = Configuration["ConnectionStrings:DefaultConnection"];
-
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect));
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            
+            services
+                .AddDbContext<AppDbContext>(options => options.UseNpgsql(connect));
+                
+            services
+                .AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-            
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            // укзывает, будет ли валидироваться издатель при валидации токена
-                            ValidateIssuer = true,
-                            // строка, представляющая издателя
-                            ValidIssuer = Configuration["JwtToken:ISSUER"],
- 
-                            // будет ли валидироваться потребитель токена
-                            ValidateAudience = true,
-                            // установка потребителя токена
-                            ValidAudience = Configuration["JwtToken:AUDIENCE"],
-                            // будет ли валидироваться время существования
-                            ValidateLifetime = true,
- 
-                            // установка ключа безопасности
-                            IssuerSigningKey =  new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtToken:KEY"])),
-                            // валидация ключа безопасности
-                            ValidateIssuerSigningKey = true,
-                        };
-                    });
+                // .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("agosproject");
 
+            services
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+                // .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    // options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // строка, представляющая издателя
+                        ValidIssuer = Configuration["JwtToken:ISSUER"],
+                        // установка потребителя токена
+                        ValidAudience = Configuration["JwtToken:AUDIENCE"],
+                        ValidateIssuerSigningKey = true,
+                        // установка ключа безопасности
+                        IssuerSigningKey =  new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtToken:KEY"])),
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
             services.AddControllers();
         }
 
@@ -77,10 +84,10 @@ namespace agos_api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
             
             app.UseAuthentication();
+            
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

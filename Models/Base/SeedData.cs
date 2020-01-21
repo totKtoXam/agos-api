@@ -19,7 +19,8 @@ namespace agos_api.Models.Base
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            _dbContext.Database.EnsureCreated();
+            // _dbContext.Database.EnsureDeleted();
+            // _dbContext.Database.EnsureCreated();
 
             #region  Roles
                 var roleList = new List<string>()

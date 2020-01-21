@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AGoS_api.Migrations
 {
-    public partial class InitialMigrate : Migration
+    public partial class Initialmigrate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,6 +65,21 @@ namespace AGoS_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Token = table.Column<string>(nullable: true),
+                    Revoked = table.Column<bool>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    FinishDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Specialitys",
                 columns: table => new
                 {
@@ -89,6 +104,7 @@ namespace AGoS_api.Migrations
                     AddressName = table.Column<string>(nullable: true),
                     NumOfHome = table.Column<int>(nullable: false),
                     City = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
                     Key = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -112,6 +128,19 @@ namespace AGoS_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WeekDays",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DayName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WeekDays", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -130,24 +159,6 @@ namespace AGoS_api.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AdminOrganizations",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdminOrganizations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AdminOrganizations_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -280,6 +291,31 @@ namespace AGoS_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserOrganizations",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    StudyOrganizationId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserOrganizations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserOrganizations_StudyOrganizations_StudyOrganizationId",
+                        column: x => x.StudyOrganizationId,
+                        principalTable: "StudyOrganizations",
+                        principalColumn: "StudyOrganizationId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserOrganizations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
@@ -301,11 +337,6 @@ namespace AGoS_api.Migrations
                         principalColumn: "SpecialityOtdelId",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdminOrganizations_UserId",
-                table: "AdminOrganizations",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -363,13 +394,20 @@ namespace AGoS_api.Migrations
                 name: "IX_SpecialityOtdels_SpecialityId",
                 table: "SpecialityOtdels",
                 column: "SpecialityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOrganizations_StudyOrganizationId",
+                table: "UserOrganizations",
+                column: "StudyOrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOrganizations_UserId",
+                table: "UserOrganizations",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AdminOrganizations");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -392,19 +430,28 @@ namespace AGoS_api.Migrations
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "StudyOrganizations");
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "Teachers");
 
             migrationBuilder.DropTable(
+                name: "UserOrganizations");
+
+            migrationBuilder.DropTable(
+                name: "WeekDays");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "SpecialityOtdels");
 
             migrationBuilder.DropTable(
-                name: "SpecialityOtdels");
+                name: "StudyOrganizations");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Otdels");

@@ -16,10 +16,12 @@ using agos_api.Models.Organizations;
 using agos_api.Models.UsersOrg;
 using agos_api.Helpers;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using System.Text;
 
 namespace agos_api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -29,13 +31,15 @@ namespace agos_api.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _config;
         private readonly AppDbContext _dbContext;
+         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration config,
-            AppDbContext dbcontext
+            AppDbContext dbcontext,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _userManager = userManager;
@@ -43,6 +47,7 @@ namespace agos_api.Controllers
             _roleManager = roleManager;
             _config = config;
             _dbContext = dbcontext;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost]
@@ -63,12 +68,21 @@ namespace agos_api.Controllers
                         //     return NotFound("Вы не подтвердили свой email");
                         // }
                     }
+                    else
+                    {
+                        return BadRequest("Пользователь с таким логином не найден.");
+                    }
                     
                     var role = await _userManager.GetRolesAsync(user);
                     var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
                     if (result.Succeeded)
                     {
                         var token = GenerateJwtToken(user.UserName, role);
+                        // var token = await _userManager.GenerateUserTokenAsync(user, "agosproject", "login");
+                        // await _userManager.SetAuthenticationTokenAsync(user, "agosproject", "RefreshToken", token);
+                        // _userManager.RemoveAuthenticationTokenAsync(user, "MyApp", "RefreshToken");
+                        // _userManager.GenerateUserTokenAsync(user, "MyApp", "RefreshToken");
+                        // _userManager.SetAuthenticationTokenAsync(user, "MyApp", "RefreshToken", newRefreshToken);
 
                         return Ok(new
                             {
@@ -88,23 +102,55 @@ namespace agos_api.Controllers
 
             return BadRequest(model);
         }
-
-        private dynamic GenerateJwtToken (string userName, IList<string> role)
+        
+        public string GenerateJwtToken (string userName, IList<string> role)
         {
-            var tokenHandker = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config["JwtToken:KEY"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var claims = new List<Claim>()
             {
-            Subject = new ClaimsIdentity( new Claim[]
-            {
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, userName),
                 new Claim(ClaimTypes.Role, role[0])
-            }),
-            Expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_config["JwtToken:RefreshDays"])),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandker.CreateToken(tokenDescriptor);
-            return tokenHandker.WriteToken(token);
+            var keyByte = Encoding.UTF8.GetBytes(_config["JwtToken:KEY"]);
+            var signInKey = new SymmetricSecurityKey(keyByte);
+            var expireHours = DateTime.Now.AddHours(Convert.ToDouble(_config["JwtToken:ExpireHours"]));
+            var token = new JwtSecurityToken(
+                audience: _config["JwtToken:AUDIENCE"],
+                issuer: _config["JwtToken:ISSUER"],
+                claims: claims,
+                expires: expireHours,
+                signingCredentials: new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256));
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public dynamic ValidateCurrentToken(string token)
+        {
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["JwtToken:KEY"]));
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = _config["JwtToken:ISSUER"],
+                    ValidAudience = _config["JwtToken:AUDIENCE"],
+                    IssuerSigningKey = key
+                }, out SecurityToken validatedToken);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+                return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("secure")]
+        public dynamic Secret() {
+            var currentUser = _httpContextAccessor.HttpContext.User;
+            return currentUser.Identity.Name;
         }
 
         // [Authorize]
@@ -124,7 +170,7 @@ namespace agos_api.Controllers
         {
             if (ModelState.IsValid)
             {
-                // if (AccountHelper.IsValidPassword(model.Password)){
+                if (AccountHelper.IsValidPassword(model.Password)){
                         var checkEmail = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
 
                     if (checkEmail == null){
@@ -142,6 +188,7 @@ namespace agos_api.Controllers
                             {
                                 return BadRequest();
                             }
+                            await _userManager.AddToRoleAsync(user, model.RoleName);
                             var studyOrganization = await _dbContext.StudyOrganizations.FirstOrDefaultAsync(
                                 x => x.StudyOrganizationId == model.studyOrganizationId);
                             if (studyOrganization != null)
@@ -168,11 +215,11 @@ namespace agos_api.Controllers
                     {
                          return BadRequest("Пользователь с такой почтой уже есть.");
                     }
-                // }
-                // else
-                // {
-                //    return BadRequest();
-                // }
+                }
+                else
+                {
+                   return BadRequest();
+                }
             }
             else
             {
