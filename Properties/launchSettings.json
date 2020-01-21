@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "AGoS_api": {
+    "agos_api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "autogenerationofschedule",

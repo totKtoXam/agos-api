@@ -3,9 +3,11 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using agos_api.Models;
+using agos_api.Helpers;
 using agos_api.Models.Base;
 using System.Threading.Tasks;
-using agos_api.Helpers;
+using agos_api.Models.Schedule;
+using agos_api.Models.Organizations;
 
 namespace agos_api.Controllers
 {

@@ -1,4 +1,6 @@
-namespace agos_api.Models
+using agos_api.Models.Organizations;
+
+namespace agos_api.Models.Schedule
 {
     public class AcademicPlan
     {

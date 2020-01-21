@@ -4,7 +4,7 @@ using agos_api.Models.Users;
 using agos_api.Models.Organizations;
 using agos_api.Models.UsersOrg;
 using agos_api.Models.StaticData;
-
+using agos_api.Models.Schedule;
 
 namespace agos_api.Models.Base
 {

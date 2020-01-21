@@ -1,4 +1,5 @@
 using agos_api.Models.Base;
+using agos_api.Models.Organizations;
 
 namespace agos_api.Models.UsersOrg
 {

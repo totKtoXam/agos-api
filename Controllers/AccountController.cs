@@ -31,7 +31,7 @@ namespace agos_api.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _config;
         private readonly AppDbContext _dbContext;
-         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,

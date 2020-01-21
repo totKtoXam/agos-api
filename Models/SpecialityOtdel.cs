@@ -1,3 +1,5 @@
+using agos_api.Models.Organizations;
+
 namespace agos_api.Models
 {
     public class SpecialityOtdel
