@@ -2,8 +2,8 @@ namespace agos_api.Models.Organizations
 {
     public class ClassroomOfTeacher 
     {
-        public int ClassroomOfTeacherId { get; set; }
-        public Teacher Teacher { get; set; }
-        public Classroom Classroom { get; set; }
+        public int ClassroomOfTeacherId { get; set; }   /// Id аудитории/кабинет закрепленный под преподавателя/учителя
+        public Teacher Teacher { get; set; }            /// Ссылка на преподавателя/учителя
+        public Classroom Classroom { get; set; }        /// Ссылка на Classrom - аудитория/кабинет
     }
 }

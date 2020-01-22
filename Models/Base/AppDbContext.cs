@@ -23,7 +23,6 @@ namespace agos_api.Models.Base
         #region USERS
             public DbSet<Teacher> Teachers { get; set; }
             public DbSet<devUser> devUsers { get; set; }
-            public DbSet<RefreshToken> RefreshTokens { get; set; }
         #endregion
 
         #region Organizations
@@ -34,13 +33,12 @@ namespace agos_api.Models.Base
             public DbSet<Otdel> Otdels { get; set; }
             public DbSet<Semestr> Semestrs { get; set; }
             public DbSet<StudyOrganization> StudyOrganizations { get; set; }
-            public DbSet <TeachDiscip> TeachDiscips { get; set; }  
+            public DbSet <TeachDiscip> TeachDiscips { get; set; } 
+            // public DbSet <RepresentativeOrganization> RepresentativeOrganizations { get; set; }
         #endregion
         
         #region Schedule
             public DbSet<AcademicPlan> AcademicPlans { get; set; }
-            public DbSet<DayOfWeek> DayOfWeeks { get; set; }
-
         #endregion
         public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<DisciplineSpecial> DisciplineSpecials { get; set; }

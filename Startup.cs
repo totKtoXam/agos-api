@@ -33,10 +33,10 @@ namespace agos_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connect = Configuration["ConnectionStrings:DefaultConnection"];
+            string connect = Configuration["ConnectionStrings:DefaultConnection"];  /// Строка для подключения СУБД PostgreSQL
             
             services
-                .AddDbContext<AppDbContext>(options => options.UseNpgsql(connect));
+                .AddDbContext<AppDbContext>(options => options.UseNpgsql(connect)); /// Подключение к СУБД PostgreSQL
                 
             services
                 .AddIdentity<ApplicationUser, IdentityRole>()
@@ -53,7 +53,7 @@ namespace agos_api
                     // options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(options =>
+                .AddJwtBearer(options =>            /// Параметры для токена
                 {
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;

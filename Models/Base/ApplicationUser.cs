@@ -8,18 +8,17 @@ namespace agos_api.Models.Base
     #region  AppUser
         public class ApplicationUser : IdentityUser
         {
-            public string Name { get; set; }
-            public string Surname { get; set; }
-            public string Middlename { get; set; }
-            public string Language { get; set; } //kz, en, ru
-            public string FullName { get {
+            public string Name { get; set; }        /// Имя
+            public string Surname { get; set; }     /// Фамилия
+            public string Middlename { get; set; }  /// Отчество
+            public string FullName { get {          /// Имя и Фамилия
                 return Name + " " + Surname;
             }}
         }
     #endregion
 
     #region RegisterViewModel
-        public class RegisterViewModel
+        public class RegisterViewModel              /// Модель для регистрации пользователя
         {
             [Required]
             [EmailAddress (ErrorMessage = "Некорректный адрес")]
@@ -58,7 +57,7 @@ namespace agos_api.Models.Base
     #endregion
 
     #region LogInViewModel
-    public class LogInViewModel
+    public class LogInViewModel                         /// Модель для авторизации пользователя
     {
         [EmailAddress (ErrorMessage = "Некорректный адрес")]
         [Display(Name = "E-mail")]
@@ -68,18 +67,5 @@ namespace agos_api.Models.Base
         [Display(Name = "Пароль")]
         public string Password { get; set; }
     }
-    #endregion
-
-    #region JwtToken
-        public class RefreshToken
-        {
-            public RefreshToken(){}
-            public RefreshToken(string _id){ Id = _id; }
-            public string Id { get; set; } // = AppUser.Id
-            public string Token { get; set; }
-            public bool Revoked { get; set; }
-            public DateTime StartDate { get; set; } // = CreatedDate
-            public DateTime FinishDate { get; set; } // = ExpireDate
-        }
     #endregion
 }

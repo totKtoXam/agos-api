@@ -78,11 +78,6 @@ namespace agos_api.Controllers
                     if (result.Succeeded)
                     {
                         var token = GenerateJwtToken(user.UserName, role);
-                        // var token = await _userManager.GenerateUserTokenAsync(user, "agosproject", "login");
-                        // await _userManager.SetAuthenticationTokenAsync(user, "agosproject", "RefreshToken", token);
-                        // _userManager.RemoveAuthenticationTokenAsync(user, "MyApp", "RefreshToken");
-                        // _userManager.GenerateUserTokenAsync(user, "MyApp", "RefreshToken");
-                        // _userManager.SetAuthenticationTokenAsync(user, "MyApp", "RefreshToken", newRefreshToken);
 
                         return Ok(new
                             {
@@ -143,14 +138,7 @@ namespace agos_api.Controllers
             {
                 return BadRequest();
             }
-                return Ok();
-        }
-
-        [Authorize]
-        [HttpGet("secure")]
-        public dynamic Secret() {
-            var currentUser = _httpContextAccessor.HttpContext.User;
-            return currentUser.Identity.Name;
+            return Ok();
         }
 
         // [Authorize]
