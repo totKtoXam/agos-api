@@ -23,18 +23,18 @@ namespace agos_api.Models.Base
             // _dbContext.Database.EnsureCreated();
 
             #region  Roles
-                var roleList = new List<string>()   /// Список ролей
+                var roleList = new List<string>()   // Список ролей
                 {
                     "devAdmin", "admin", "helper", "guest"
                 };
 
-                /// Достать все роли из базы
+                // Достать все роли из базы
                 var roles = roleManager.Roles.Select(x => x.Name).ToList();
 
-                /// Сравнить роли из списка и базы
+                // Сравнить роли из списка и базы
                 var roleDiff = roleList.Except(roles).ToList();
 
-                /// Если есть разница, то добавить не существующие роли из списка в базу
+                // Если есть разница, то добавить не существующие роли из списка в базу
                 if (roleDiff.Count() > 0)                         
                 {
                     foreach (var item in roleDiff)
@@ -73,10 +73,10 @@ namespace agos_api.Models.Base
             #endregion
 
             #region devUsers
-                /// Поиск пользователя в базе
+                // Поиск пользователя в базе
                 var chiefAdmin = userManager.Users.FirstOrDefault(x => x.UserName == "agos.vb@gmail.com");
 
-                /// Если таковой пользователь не имеется, то добавить его в общую таблицу всех пользователей AspNetUsers
+                // Если таковой пользователь не имеется, то добавить его в общую таблицу всех пользователей AspNetUsers
                 if (chiefAdmin == null)
                 {
                     chiefAdmin = new ApplicationUser
@@ -87,16 +87,16 @@ namespace agos_api.Models.Base
                         Name = "devAdmin",
                         EmailConfirmed = true
                     };
-                    /// Добавление пользователя
+                    // Добавление пользователя
                     var chiefAdminCreated = userManager.CreateAsync(chiefAdmin, "@G0Sik");
                     chiefAdminCreated.Wait();
 
-                    /// Добавление роли пользователя
+                    // Добавление роли пользователя
                     var chiefAdminRole = userManager.AddToRoleAsync(chiefAdmin, "devAdmin");
                     chiefAdminRole.Wait();
                 }
 
-                /// Если таковой пользователь не имеетя, то добавиль его в таблицу devUsers - администрация системы
+                // Если таковой пользователь не имеетя, то добавиль его в таблицу devUsers - администрация системы
                 var opExisting = _dbContext.Users.Find(chiefAdmin.Id);
                     if (opExisting != null)
                     {

@@ -10,7 +10,7 @@ namespace agos_api.Models.Users
             Id = _user.Id;
             User = _user;
         }
-        public string Id { get; set; }              /// Id пользователя из группы devUser - администрация системы
-        public ApplicationUser User { get; set; }   /// Ссылка на пользователя из общей таблицы пользователей
+        public string Id { get; set; }              // Id пользователя из группы devUser - администрация системы
+        public ApplicationUser User { get; set; }   // Ссылка на пользователя из общей таблицы пользователей
     }
 }

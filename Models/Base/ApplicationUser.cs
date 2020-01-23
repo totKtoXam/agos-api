@@ -8,17 +8,17 @@ namespace agos_api.Models.Base
     #region  AppUser
         public class ApplicationUser : IdentityUser
         {
-            public string Name { get; set; }        /// Имя
-            public string Surname { get; set; }     /// Фамилия
-            public string Middlename { get; set; }  /// Отчество
-            public string FullName { get {          /// Имя и Фамилия
+            public string Name { get; set; }        // Имя
+            public string Surname { get; set; }     // Фамилия
+            public string Middlename { get; set; }  // Отчество
+            public string FullName { get {          // Имя и Фамилия
                 return Name + " " + Surname;
             }}
         }
     #endregion
 
     #region RegisterViewModel
-        public class RegisterViewModel              /// Модель для регистрации пользователя
+        public class RegisterViewModel              // Модель для регистрации пользователя
         {
             [Required]
             [EmailAddress (ErrorMessage = "Некорректный адрес")]
@@ -57,7 +57,7 @@ namespace agos_api.Models.Base
     #endregion
 
     #region LogInViewModel
-    public class LogInViewModel                         /// Модель для авторизации пользователя
+    public class LogInViewModel                         // Модель для авторизации пользователя
     {
         [EmailAddress (ErrorMessage = "Некорректный адрес")]
         [Display(Name = "E-mail")]
