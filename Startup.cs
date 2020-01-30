@@ -73,38 +73,39 @@ namespace agos_api
                         ClockSkew = TimeSpan.Zero
                     };
                 });
-            // services.AddAutoMapper();
-            // var mappingConfig = new MapperConfiguration(mc =>
-            // {
-            //     mc.AddProfile(new MappingProfile());
-            // });
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
 
-            // IMapper mapper = mappingConfig.CreateMapper();
-            // services.AddSingleton(mapper);
-                
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddCors();
             services.AddControllers();
-            // services.AddSwaggerGen(c =>
-            // {
-            //     c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "AGoS restAPI", Version = "v1.0" });
-            // });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "AGoS restAPI", Version = "v1.0" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // app.UseSwagger();
-            // app.UseSwaggerUI(c =>
-            // {
-            //     c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "AGoS restAPI v1.0");
-            //     c.RoutePrefix = string.Empty;
-            // });
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "AGoS restAPI v1.0");
+                c.RoutePrefix = string.Empty;
+            });
             
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseHttpsRedirection();
+            
+            app.UseCors();
 
             app.UseRouting();
             

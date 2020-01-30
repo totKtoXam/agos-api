@@ -39,7 +39,7 @@ namespace agos_api.Controllers
             return await _dbContext.Specialitys.ToListAsync();
         }
 
-        // Получени одной специальности по SpecialityId - идентификатору
+        // Получение одной специальности по SpecialityId - идентификатору
         [HttpGet("getsingle/{id}")]
         public async Task<ActionResult<Speciality>> GetSingleRecordAsync(int id)
         {

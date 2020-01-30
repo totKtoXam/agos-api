@@ -15,40 +15,39 @@ namespace agos_api.Controllers
     [Route("api/[controller]")]
     public class StudyOrganizationController : ControllerBase
     {
-        AppDbContext db;
+        private readonly AppDbContext _dbContext;
         public StudyOrganizationController(AppDbContext context)
         {
-            db = context;
+            _dbContext = context;
         }
  
         [HttpPost("insert")]
         public async Task<IActionResult> InsertRecordAsyns([FromBody] StudyOrganization model)
         {
             var studyOrganization = new StudyOrganization(model);
-            db.StudyOrganizations.Add(studyOrganization);
-            await db.SaveChangesAsync();
-            StudyOrganization _studyOrganization = db.StudyOrganizations.OrderByDescending(x => x.StudyOrganizationId).FirstOrDefault();
-            _studyOrganization.Key = StudyOrganizationHelper.KeyGenerate(
-                    _studyOrganization.StudyOrganizationId, 
-                    _studyOrganization.ShortName, 
-                    _studyOrganization.City
+            _dbContext.StudyOrganizations.Add(studyOrganization);
+            await _dbContext.SaveChangesAsync();
+            studyOrganization.Key = StudyOrganizationHelper.KeyGenerate(
+                    studyOrganization.StudyOrganizationId, 
+                    studyOrganization.ShortName, 
+                    studyOrganization.City
                 );
-            db.Update(_studyOrganization);
-            await db.SaveChangesAsync();
+            _dbContext.Update(studyOrganization);
+            await _dbContext.SaveChangesAsync();
             return Ok(studyOrganization);
         }
 
         [HttpGet("getall")]
         public async Task<ActionResult<IEnumerable<StudyOrganization>>> GetAllRecordsAsyns()
         {
-            return await db.StudyOrganizations.ToListAsync();
+            return await _dbContext.StudyOrganizations.ToListAsync();
         }
  
         // GET api/users/5
         [HttpGet("getsingle/{id}")]
         public async Task<ActionResult<Speciality>> GetSingleRecordAsyns(int id)
         {
-            StudyOrganization studyOrganization = await db.StudyOrganizations.FirstOrDefaultAsync(x => x.StudyOrganizationId == id);
+            StudyOrganization studyOrganization = await _dbContext.StudyOrganizations.FirstOrDefaultAsync(x => x.StudyOrganizationId == id);
             if (studyOrganization == null)
                 return NotFound();
             return new ObjectResult(studyOrganization);
@@ -62,13 +61,13 @@ namespace agos_api.Controllers
             {
                 return BadRequest();
             }
-            if (!db.StudyOrganizations.Any(x => x.StudyOrganizationId == model.StudyOrganizationId))
+            if (!_dbContext.StudyOrganizations.Any(x => x.StudyOrganizationId == model.StudyOrganizationId))
             {
                 return NotFound();
             }
  
-            db.Update(model);
-            await db.SaveChangesAsync();
+            _dbContext.Update(model);
+            await _dbContext.SaveChangesAsync();
             return Ok(model);
         }
  
@@ -76,13 +75,13 @@ namespace agos_api.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Speciality>> DeleteRecordAsyns(int id)
         {
-            StudyOrganization studyOrganization = db.StudyOrganizations.FirstOrDefault(x => x.StudyOrganizationId == id);
+            StudyOrganization studyOrganization = _dbContext.StudyOrganizations.FirstOrDefault(x => x.StudyOrganizationId == id);
             if (studyOrganization == null)
             {
                 return NotFound();
             }
-            db.StudyOrganizations.Remove(studyOrganization);
-            await db.SaveChangesAsync();
+            _dbContext.StudyOrganizations.Remove(studyOrganization);
+            await _dbContext.SaveChangesAsync();
             return Ok(studyOrganization);
         }
     }

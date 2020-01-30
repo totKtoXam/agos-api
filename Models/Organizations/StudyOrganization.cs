@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace agos_api.Models.Organizations
 {
     public class StudyOrganization
@@ -14,6 +16,19 @@ namespace agos_api.Models.Organizations
             Key = "noKey";
         }
         
+        public StudyOrganization(int studyOrganizationId, string officialName, string shortName, string addressName, int numOfHome, string city, string phone, string key) 
+        {
+            this.StudyOrganizationId = studyOrganizationId;
+                this.OfficialName = officialName;
+                this.ShortName = shortName;
+                this.AddressName = addressName;
+                this.NumOfHome = numOfHome;
+                this.City = city;
+                this.Phone = phone;
+                this.Key = key;
+               
+        }
+        [Key]
         public int StudyOrganizationId { get; set; }    // Id учебной организации
         public string OfficialName { get; set; }        // Официальное название учебной организации
         public string ShortName { get; set; }           // Короткое название учебной организации (аббревиатура)
@@ -21,7 +36,10 @@ namespace agos_api.Models.Organizations
         public int NumOfHome { get; set; }              // Номер дома учебной организации
         public string City { get; set; }                // Город в котором находится учебная организация
         public string Phone { get; set; }               // Городской номер учебной организации
-        // public RepresentativeOrganization RepresentativeOrganization { get; set; }  //  Ссылка на представителя учебной организации
-        public string Key { get; set; }                 // Ключ учебной организации для получения доступа к определенынм информациям
+    
+        #nullable enable
+        public RepresentativeOrganization? RepresentativeOrganization { get; set; }  //  Ссылка на представителя учебной организации
+        #nullable enable
+        public string? Key { get; set; }                 // Ключ учебной организации для получения доступа к определенынм информациям
     }
 }

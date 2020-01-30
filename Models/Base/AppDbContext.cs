@@ -5,6 +5,8 @@ using agos_api.Models.Organizations;
 using agos_api.Models.UsersOrg;
 using agos_api.Models.StaticData;
 using agos_api.Models.Schedule;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace agos_api.Models.Base
 {
@@ -17,6 +19,33 @@ namespace agos_api.Models.Base
          protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // builder.Entity<WeekDay>()
+            //     .Property(b => b.FullDayName)
+            //     .HasConversion(
+            //             v => JsonConvert.SerializeObject(v),
+            //             v => JsonConvert.DeserializeObject<Dictionary<string, string>>(v)
+            //     );
+
+            // builder.Entity<WeekDay>()
+            //     .Property(b => b.ShortDayName)
+            //     .HasConversion(
+            //             v => JsonConvert.SerializeObject(v),
+            //             v => JsonConvert.DeserializeObject<Dictionary<string, string>>(v)
+            //     );
+            
+            // builder.Entity<TypeLesson>()
+            //     .Property(b => b.TypeLessonName)
+            //     .HasConversion(
+            //             v => JsonConvert.SerializeObject(v),
+            //             v => JsonConvert.DeserializeObject<Dictionary<string, string>>(v)
+            //     );
+
+            // builder.Entity<TypeWeek>()
+            //     .Property(b => b.TypeWeekName)
+            //     .HasConversion(
+            //             v => JsonConvert.SerializeObject(v),
+            //             v => JsonConvert.DeserializeObject<Dictionary<string, string>>(v)
+            //     );
         }
             
    

@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace agos_api.Models.Base
 {
@@ -51,6 +52,7 @@ namespace agos_api.Models.Base
             public string PasswordConfirm { get; set; }
 
             [Required]
+            [ForeignKey("StudyOrganization")]
             [Display(Name = "Учебная организация")]
             public int studyOrganizationId { get; set; }
         }
