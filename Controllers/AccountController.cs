@@ -13,7 +13,7 @@ using agos_api.Models;
 using agos_api.Models.Base;
 using agos_api.Models.Users;
 using agos_api.Models.Organizations;
-using agos_api.Models.UsersOrg;
+using agos_api.Models.Organizations.PersonOrg;
 using agos_api.Helpers;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;

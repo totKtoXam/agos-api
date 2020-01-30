@@ -1,3 +1,5 @@
+using agos_api.Models.Organizations.PersonOrg;
+
 namespace agos_api.Models.Organizations
 {
     public class ClassroomOfTeacher 

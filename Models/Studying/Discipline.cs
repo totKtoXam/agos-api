@@ -1,6 +1,6 @@
 using agos_api.Models.StaticData;
 
-namespace agos_api.Models
+namespace agos_api.Models.Studying
 {
     public class Discipline 
     {

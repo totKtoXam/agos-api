@@ -1,6 +1,6 @@
 using agos_api.Models.Organizations;
 
-namespace agos_api.Models
+namespace agos_api.Models.Studying
 {
     public class SpecialityOtdel
     {

@@ -2,9 +2,10 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using agos_api.Models.Users;
 using agos_api.Models.Organizations;
-using agos_api.Models.UsersOrg;
+using agos_api.Models.Organizations.PersonOrg;
 using agos_api.Models.StaticData;
 using agos_api.Models.Schedule;
+using agos_api.Models.Studying;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 

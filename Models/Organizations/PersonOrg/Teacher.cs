@@ -1,4 +1,4 @@
-namespace agos_api.Models.Organizations
+namespace agos_api.Models.Organizations.PersonOrg
 {
     public class Teacher
     {

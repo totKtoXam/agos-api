@@ -1,4 +1,5 @@
 using agos_api.Models.Organizations;
+using agos_api.Models.Studying;
 
 namespace agos_api.Models.Schedule
 {

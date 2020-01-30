@@ -1,11 +1,11 @@
 using System;
+using agos_api.Models.Studying;
 
-namespace agos_api.Models.Organizations
+namespace agos_api.Models.Schedule
 {
 
-        public class Semestr
+    public class Semestr
     {
-
         public int SemestrId { get; set; }              // Id 1-го семестра в год
         public string CourseNum { get; set; }           // Курс/Год обучения
         public Speciality Speciality { get; set; }      // Ссылка на Speciality (Специальность)

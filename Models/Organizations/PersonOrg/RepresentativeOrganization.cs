@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace agos_api.Models.Organizations
+namespace agos_api.Models.Organizations.PersonOrg
 {
     public class RepresentativeOrganization
     {

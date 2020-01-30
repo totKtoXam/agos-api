@@ -1,4 +1,4 @@
-namespace agos_api.Models.Organizations
+namespace agos_api.Models.Studying
 {
     public class Group
     {

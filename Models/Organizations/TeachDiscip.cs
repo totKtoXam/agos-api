@@ -1,3 +1,7 @@
+using agos_api.Models.Organizations.PersonOrg;
+using agos_api.Models.Studying;
+
+
 namespace agos_api.Models.Organizations
 {
     public class TeachDiscip 

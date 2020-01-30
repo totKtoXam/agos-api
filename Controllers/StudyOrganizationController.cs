@@ -7,6 +7,7 @@ using agos_api.Helpers;
 using agos_api.Models.Base;
 using System.Threading.Tasks;
 using agos_api.Models.Schedule;
+using agos_api.Models.Studying;
 using agos_api.Models.Organizations;
 
 namespace agos_api.Controllers
