@@ -61,6 +61,7 @@ namespace agos_api.Models.Base
     #region LogInViewModel
     public class LogInViewModel                         // Модель для авторизации пользователя
     {
+        [Required]
         [EmailAddress (ErrorMessage = "Некорректный адрес")]
         [Display(Name = "E-mail")]
         public string Email { get; set; }
