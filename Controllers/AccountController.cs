@@ -32,6 +32,7 @@ namespace agos_api.Controllers
         private readonly IConfiguration _config;
         private readonly AppDbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAccountHelper _accountHelper;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -39,7 +40,8 @@ namespace agos_api.Controllers
             RoleManager<IdentityRole> roleManager,
             IConfiguration config,
             AppDbContext dbcontext,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IAccountHelper accountHelper
             )
         {
             _userManager = userManager;
@@ -48,6 +50,7 @@ namespace agos_api.Controllers
             _config = config;
             _dbContext = dbcontext;
             _httpContextAccessor = httpContextAccessor;
+            _accountHelper = accountHelper;
         }
 
         [HttpPost]
@@ -77,7 +80,7 @@ namespace agos_api.Controllers
                     var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
                     if (result.Succeeded)
                     {
-                        var token = GenerateJwtToken(user.UserName, role);
+                        var token = _accountHelper.GenerateJwtToken(user.UserName, role);
 
                         return Ok(new
                             {
@@ -98,48 +101,7 @@ namespace agos_api.Controllers
             return BadRequest(model);
         }
         
-        public string GenerateJwtToken (string userName, IList<string> role)
-        {
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, userName),
-                new Claim(ClaimTypes.Role, role[0])
-            };
-            var keyByte = Encoding.UTF8.GetBytes(_config["JwtToken:KEY"]);
-            var signInKey = new SymmetricSecurityKey(keyByte);
-            var expireHours = DateTime.Now.AddHours(Convert.ToDouble(_config["JwtToken:ExpireHours"]));
-            var token = new JwtSecurityToken(
-                audience: _config["JwtToken:AUDIENCE"],
-                issuer: _config["JwtToken:ISSUER"],
-                claims: claims,
-                expires: expireHours,
-                signingCredentials: new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256));
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public dynamic ValidateCurrentToken(string token)
-        {
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["JwtToken:KEY"]));
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidIssuer = _config["JwtToken:ISSUER"],
-                    ValidAudience = _config["JwtToken:AUDIENCE"],
-                    IssuerSigningKey = key
-                }, out SecurityToken validatedToken);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-            return Ok();
-        }
+       
 
         // [Authorize]
         [HttpGet]
@@ -158,7 +120,7 @@ namespace agos_api.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (AccountHelper.IsValidPassword(model.Password)){
+                if (_accountHelper.IsValidPassword(model.Password)){
                         var checkEmail = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
 
                     if (checkEmail == null){

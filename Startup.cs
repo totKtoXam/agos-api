@@ -40,7 +40,7 @@ namespace agos_api
             
             services
                 .AddDbContext<AppDbContext>(options => options.UseNpgsql(connect)); // Подключение к СУБД PostgreSQL
-
+            
             services
                 .AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
