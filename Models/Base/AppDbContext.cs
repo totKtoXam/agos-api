@@ -60,11 +60,11 @@ namespace agos_api.Models.Base
             public DbSet<Classroom> Classrooms { get; set; } 
             public DbSet<ClassroomOfTeacher> ClassroomOfTeachers { get; set; }
             public DbSet<Group> Groups { get; set; }
-            public DbSet<Otdel> Otdels { get; set; }
+            public DbSet<Speciality> Specialitys { get; set; }
             public DbSet<Semestr> Semestrs { get; set; }
             public DbSet<StudyOrganization> StudyOrganizations { get; set; }
             public DbSet <TeachDiscip> TeachDiscips { get; set; } 
-            // public DbSet <RepresentativeOrganization> RepresentativeOrganizations { get; set; }
+            public DbSet <RepresentativeOrganization> RepresentativeOrganizations { get; set; }
         #endregion
         
         #region Schedule
@@ -73,8 +73,8 @@ namespace agos_api.Models.Base
         public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<DisciplineSpecial> DisciplineSpecials { get; set; }
         public DbSet<HolidayCalendar> HolidayCalendars { get; set; }
-        public DbSet<Speciality> Specialitys { get; set; }
-        public DbSet<SpecialityOtdel> SpecialityOtdels { get; set; }
+        public DbSet<Classification> Classifications { get; set; }
+        public DbSet<ClassificationSpeciality> ClassificationSpecialitys { get; set; }
         public DbSet<TypeLesson> TypeLessons { get; set; }
         public DbSet<TypeWeek> TypeWeeks { get; set; }
         public DbSet<WeekDay> WeekDays { get; set; }
