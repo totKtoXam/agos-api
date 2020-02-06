@@ -52,7 +52,7 @@ namespace agos_api.Models.Base
    
         #region USERS
             public DbSet<Teacher> Teachers { get; set; }
-            public DbSet<devUser> devUsers { get; set; }
+            public DbSet<DevUser> DevUsers { get; set; }
         #endregion
 
         #region Organizations

@@ -17,11 +17,12 @@ using agos_api.Models.Organizations.PersonOrg;
 using agos_api.Helpers;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using agos_api.Services;
 using System.Text;
 
 namespace agos_api.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -33,6 +34,8 @@ namespace agos_api.Controllers
         private readonly AppDbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAccountHelper _accountHelper;
+        private readonly IEmailServices _emailServices;
+        private readonly IEmailHelper _emailHelper;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -41,7 +44,9 @@ namespace agos_api.Controllers
             IConfiguration config,
             AppDbContext dbcontext,
             IHttpContextAccessor httpContextAccessor,
-            IAccountHelper accountHelper
+            IAccountHelper accountHelper,
+            IEmailServices emailServices,
+            IEmailHelper emailHelper
             )
         {
             _userManager = userManager;
@@ -51,6 +56,8 @@ namespace agos_api.Controllers
             _dbContext = dbcontext;
             _httpContextAccessor = httpContextAccessor;
             _accountHelper = accountHelper;
+            _emailServices = emailServices;
+            _emailHelper = emailHelper;
         }
 
         [HttpPost]
@@ -65,17 +72,17 @@ namespace agos_api.Controllers
                     var user = await _userManager.FindByNameAsync(model.Email);
                     if (user != null)
                     {
-                        // if (!await _userManager.IsEmailConfirmedAsync(user))
-                        // {
-                        //     ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
-                        //     return NotFound("Вы не подтвердили свой email");
-                        // }
+                        if (!await _userManager.IsEmailConfirmedAsync(user))
+                        {
+                            ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
+                            return NotFound("Вы не подтвердили свой email");
+                        }
                     }
                     else
                     {
                         return BadRequest("Пользователь с таким логином не найден.");
                     }
-                    
+
                     var role = await _userManager.GetRolesAsync(user);
                     var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
                     if (result.Succeeded)
@@ -83,12 +90,12 @@ namespace agos_api.Controllers
                         var token = _accountHelper.GenerateJwtToken(user.UserName, role);
 
                         return Ok(new
-                            {
-                                user.UserName,
-                                user.FullName,
-                                role,
-                                token
-                            });
+                        {
+                            user.UserName,
+                            user.FullName,
+                            role,
+                            token
+                        });
                     }
                     else
                     {
@@ -100,8 +107,8 @@ namespace agos_api.Controllers
 
             return BadRequest(model);
         }
-        
-       
+
+
 
         // [Authorize]
         [HttpGet]
@@ -113,62 +120,91 @@ namespace agos_api.Controllers
             return Ok();
         }
 
-        // [Authorize]
         [HttpPost]
+        [AllowAnonymous]
         [Route("register")]
         public async Task<IActionResult> RegisterUserOrg([FromBody]RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                if (_accountHelper.IsValidPassword(model.Password)){
-                        var checkEmail = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
+                if (_accountHelper.IsValidPassword(model.Password))
+                {
+                    var checkEmail = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
 
-                    if (checkEmail == null){
-                        ApplicationUser user = new ApplicationUser { 
+                    if (checkEmail == null)
+                    {
+                        ApplicationUser user = new ApplicationUser
+                        {
                             Email = model.Email,
                             UserName = model.Email,
                             Name = model.Name,
                             Surname = model.Surname,
                             Middlename = model.Middlename,
-                            };
-                        try{
-                            var result = await _userManager.CreateAsync(user, model.Password);
+                        };
+                        try
+                        {
+                            await _userManager.CreateAsync(user, model.Password);
+
                             var role = await _roleManager.FindByNameAsync(model.RoleName);
                             if (role == null)
                             {
                                 return BadRequest();
                             }
                             await _userManager.AddToRoleAsync(user, model.RoleName);
-                            var studyOrganization = await _dbContext.StudyOrganizations.FirstOrDefaultAsync(
-                                x => x.StudyOrganizationId == model.studyOrganizationId);
-                            if (studyOrganization != null)
-                            {
-                                var OrganizationUser = new UserOrganization(user, studyOrganization);
-                                _dbContext.UserOrganizations.Add(OrganizationUser);
-                            }
-                            else
-                            {
-                                var devUser = new devUser(user);
-                                _dbContext.devUsers.Add(devUser);
-                            }
+                            // var studyOrganization = await _dbContext.StudyOrganizations.FirstOrDefaultAsync(
+                            //     x => x.StudyOrganizationId == model.studyOrganizationId);
+                            // if (studyOrganization != null)
+                            // {
+                            //     var OrganizationUser = new UserOrganization(user, studyOrganization);
+                            //     _dbContext.UserOrganizations.Add(OrganizationUser);
+                            // }
+                            // else
+                            // {
+                                var DevUser = new DevUser(user);
+                                _dbContext.DevUsers.Add(DevUser);
+                            // }
 
-                            await _dbContext.SaveChangesAsync();
-                            return Ok(user);
-                            }
-                            catch(Exception ex)
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            var callbackUrl = Url.Action(
+                                "ConfirmEmail",
+                                "Account",
+                                new { userId = user.Id, code = code },
+                                protocol: HttpContext.Request.Scheme
+                            );
+
+                            var sendResult = await _emailHelper.SendEmailConfirmAsync(user, callbackUrl);
+                            if (!sendResult)
                             {
-                                Console.WriteLine(ex);
-                                return BadRequest(model);
+                                var findUserResult = await _userManager.FindByIdAsync(user.Id);
+                                if (findUserResult != null)
+                                {
+                                    await _userManager.DeleteAsync(user);
+                                }
+                                return BadRequest(string.Format(@"Не удалось отправить сообщения для подтверждения Вашей электроной почты
+                                                                 или введенной Вами электронной почты не существуе.
+                                                                Повторите попытку регистрациию"));
                             }
+                            await _dbContext.SaveChangesAsync();
+
+                            return Ok(new {
+                                user,
+                                message = "Для заврешения регистрации проверьте электронную почту и подтвердите её, перейдя по ссылке."
+                                });
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                            return BadRequest(model);
+                        }
                     }
                     else
                     {
-                         return BadRequest("Пользователь с такой почтой уже есть.");
+                        return BadRequest("Пользователь с такой почтой уже есть.");
                     }
                 }
                 else
                 {
-                   return BadRequest();
+                    return BadRequest("Password is not valid");
                 }
             }
             else
@@ -178,10 +214,30 @@ namespace agos_api.Controllers
         }
 
         // [HttpPost]
-        // [Route("registerdevuser")]
+        // [Route("registerDevUser")]
         // public async Task<IActionResult> RegisterDevUser([FromBody]RegisterViewModel model)
         // {
 
         // }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return BadRequest();
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return  BadRequest();
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if(result.Succeeded)
+                return Ok();
+            else
+                return  BadRequest();
+        }
     }
 }

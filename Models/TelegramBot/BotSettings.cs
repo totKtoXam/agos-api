@@ -1,4 +1,4 @@
-namespace agos_api.AppSettings
+namespace agos_api.Models.TelegramBot
 {
     public class BotSettings
     {

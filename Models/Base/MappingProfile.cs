@@ -8,7 +8,7 @@ namespace agos_api.Models.Base
     {
         public MappingProfile()
         {
-            CreateMap<devUser, devUser>();
+            CreateMap<DevUser, DevUser>();
         }
     }
 }

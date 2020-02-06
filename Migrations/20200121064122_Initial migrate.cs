@@ -247,7 +247,7 @@ namespace AGoS_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "devUsers",
+                name: "DevUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -255,9 +255,9 @@ namespace AGoS_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_devUsers", x => x.Id);
+                    table.PrimaryKey("PK_DevUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_devUsers_AspNetUsers_UserId",
+                        name: "FK_DevUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -376,8 +376,8 @@ namespace AGoS_api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_devUsers_UserId",
-                table: "devUsers",
+                name: "IX_DevUsers_UserId",
+                table: "DevUsers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -424,7 +424,7 @@ namespace AGoS_api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "devUsers");
+                name: "DevUsers");
 
             migrationBuilder.DropTable(
                 name: "Groups");

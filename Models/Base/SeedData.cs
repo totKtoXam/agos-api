@@ -131,7 +131,7 @@ namespace agos_api.Models.Base
             }
             #endregion
 
-            #region devUsers
+            #region DevUsers
             // Поиск пользователя в базе
             var chiefAdmin = userManager.Users.FirstOrDefault(x => x.UserName == "agos.vb@gmail.com");
 
@@ -155,12 +155,12 @@ namespace agos_api.Models.Base
                 chiefAdminRole.Wait();
             }
 
-            // Если таковой пользователь не имеетя, то добавиль его в таблицу devUsers - администрация системы
+            // Если таковой пользователь не имеетя, то добавиль его в таблицу DevUsers - администрация системы
             var opExisting = _dbContext.Users.Find(chiefAdmin.Id);
             if (opExisting == null)
             {
-                var opNew = new devUser(chiefAdmin);
-                _dbContext.devUsers.Add(opNew);
+                var opNew = new DevUser(chiefAdmin);
+                _dbContext.DevUsers.Add(opNew);
             }
             #endregion
 

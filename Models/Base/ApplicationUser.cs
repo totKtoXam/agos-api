@@ -22,7 +22,7 @@ namespace agos_api.Models.Base
         public class RegisterViewModel              // Модель для регистрации пользователя
         {
             [Required]
-            [EmailAddress (ErrorMessage = "Некорректный адрес")]
+            // [EmailAddress (ErrorMessage = "Некорректный адрес")]
             [Display(Name = "E-mail")]
             public string Email { get; set; }
 
@@ -51,10 +51,10 @@ namespace agos_api.Models.Base
             [Display(Name = "Подтверждение пароля")]
             public string PasswordConfirm { get; set; }
 
-            [Required]
-            [ForeignKey("StudyOrganization")]
-            [Display(Name = "Учебная организация")]
-            public int studyOrganizationId { get; set; }
+            // [Required]
+            // [ForeignKey("StudyOrganization")]
+            // [Display(Name = "Учебная организация")]
+            // public int? studyOrganizationId { get; set; }
         }
     #endregion
 

@@ -6,26 +6,37 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
+using agos_api.Models.Base;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using agos_api.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace agos_api.Helpers
 {
     public interface IAccountHelper
     {
-        bool IsValidPassword (string password);
-        string GenerateJwtToken (string userName, IList<string> role);
+        bool IsValidPassword(string password);
+        string GenerateJwtToken(string userName, IList<string> role);
     }
 
     public class AccountHelper : IAccountHelper
     {
         private readonly IConfiguration _config;
+        private readonly AppDbContext _dbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountHelper(
-            IConfiguration config
+            IConfiguration config,
+            UserManager<ApplicationUser> userManager,
+            AppDbContext dbContext
             )
         {
             _config = config;
+            _userManager = userManager;
+            _dbContext = dbContext;
         }
-        public bool IsValidPassword (string password)
+        public bool IsValidPassword(string password)
         {
             Match check1, check2, check3, check4;
             Regex regex = new Regex(@"([A-Z]+)");
@@ -44,8 +55,7 @@ namespace agos_api.Helpers
             }
             return isValidPass;
         }
-
-        public string GenerateJwtToken (string userName, IList<string> role)
+        public string GenerateJwtToken(string userName, IList<string> role)
         {
             var claims = new List<Claim>()
             {
@@ -64,6 +74,8 @@ namespace agos_api.Helpers
                 signingCredentials: new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256));
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
 
         // public dynamic ValidateCurrentToken(string token)
         // {

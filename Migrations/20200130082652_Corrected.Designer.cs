@@ -634,7 +634,7 @@ namespace AGoS_api.Migrations
                     b.ToTable("WeekDays");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Users.devUser", b =>
+            modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -646,7 +646,7 @@ namespace AGoS_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("devUsers");
+                    b.ToTable("DevUsers");
                 });
 
             modelBuilder.Entity("agos_api.Models.UsersOrg.UserOrganization", b =>
@@ -807,7 +807,7 @@ namespace AGoS_api.Migrations
                         .HasForeignKey("SpecialityId");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Users.devUser", b =>
+            modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
                 {
                     b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
                         .WithMany()

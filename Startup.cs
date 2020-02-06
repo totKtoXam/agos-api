@@ -19,8 +19,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.OpenApi.Models;
+using agos_api.Helpers;
 using AutoMapper;
 using agos_api.Models.Base;
+using agos_api.Services;
 
 namespace agos_api
 {
@@ -46,6 +48,11 @@ namespace agos_api
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
                 // .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("agosproject");
+
+            services.AddTransient<IAccountHelper, AccountHelper>();
+            services.AddTransient<IEmailHelper, EmailHelper>();
+            services.AddScoped<IEmailServices, EmailServices>();
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()

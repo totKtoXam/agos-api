@@ -657,7 +657,7 @@ namespace AGoS_api.Migrations
                     b.ToTable("Specialitys");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Users.devUser", b =>
+            modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -669,7 +669,7 @@ namespace AGoS_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("devUsers");
+                    b.ToTable("DevUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -821,7 +821,7 @@ namespace AGoS_api.Migrations
                         .HasForeignKey("ClassificationSpecialityId");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Users.devUser", b =>
+            modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
                 {
                     b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
                         .WithMany()
