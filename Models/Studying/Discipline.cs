@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using agos_api.Models.StaticData;
 
 namespace agos_api.Models.Studying
@@ -9,5 +10,10 @@ namespace agos_api.Models.Studying
         public TypeLesson TypeLesson { get; set; }  // Ссылка на тип обучения
         public string Classifier { get; set; }      // Классификатор дисциплины (предмет обучения)
         
+    }
+
+    public class DisciplineSpecialityViewModel : Discipline
+    {
+        public List<int?> SpecialityIdList { get; set; }
     }
 }

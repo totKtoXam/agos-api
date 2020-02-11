@@ -74,7 +74,7 @@ namespace agos_api.Models.Base
         public DbSet<DisciplineSpecial> DisciplineSpecials { get; set; }
         public DbSet<HolidayCalendar> HolidayCalendars { get; set; }
         public DbSet<Classification> Classifications { get; set; }
-        public DbSet<ClassificationSpeciality> ClassificationSpecialitys { get; set; }
+        // public DbSet<ClassificationSpeciality> ClassificationSpecialitys { get; set; }
         public DbSet<TypeLesson> TypeLessons { get; set; }
         public DbSet<TypeWeek> TypeWeeks { get; set; }
         public DbSet<WeekDay> WeekDays { get; set; }

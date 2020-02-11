@@ -7,42 +7,33 @@ using agos_api.Models.Base;
 using System.Threading.Tasks;
 using agos_api.Models.Studying;
 using Microsoft.AspNetCore.Authorization;
+using agos_api.Helpers;
 
 namespace agos_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/")]
-    public class SpecialityController : ControllerBase
+    public class DisciplineController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
-        public SpecialityController(AppDbContext context)
+        private readonly IDisciplineHelper _disciplineHelper;
+        public DisciplineController(AppDbContext context, IDisciplineHelper disciplineHelper)
         {
             _dbContext = context;
+            _disciplineHelper = disciplineHelper;
         }
 
         // Добавление новой записи
         [HttpPost("insert")]
-        public async Task<IActionResult> InsertRecordAsync([FromBody] List<Speciality> specialityList)
+        public async Task<IActionResult> InsertRecordAsync([FromBody] List<DisciplineSpecialityViewModel> model)
         {
-            if(specialityList == null)
+            if(model == null)
                 return BadRequest();
 
-            List<Speciality> notAddedSpecialityList = new List<Speciality>();
-
-            foreach(var speciality in specialityList)
-            {
-                if ((speciality != null) || !((string.IsNullOrEmpty(speciality.SpecialityClassifier)) && (string.IsNullOrEmpty(speciality.SpecialityName))))
-                    // Добление записи
-                    _dbContext.Specialitys.Add(speciality);
-                else
-                    notAddedSpecialityList.Add(speciality);
-            }
-            
-            // Сохранение базы данных
-            await _dbContext.SaveChangesAsync();
+            var resultModel = await _disciplineHelper.AddDisciplineWithDiscSpecAsync(model);
 
             // Выдать код ответа 200 - запись сохранена
-            return Ok(notAddedSpecialityList);
+            return Ok(resultModel);
         }
 
         // Получение списка всех записей
@@ -57,54 +48,54 @@ namespace agos_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Speciality>> GetSingleRecordAsync(int id)
         {
-            Speciality speciality = await _dbContext.Specialitys.FirstOrDefaultAsync(x => x.SpecialityId == id);
+            Discipline discipline = await _dbContext.Disciplines.FirstOrDefaultAsync(x => x.DisciplineId == id);
             // Если запись не найдена, то выдать код ошибки - 404
-            if (speciality == null)
+            if (discipline == null)
                 return NotFound("Запись не найдена.");
             // Вернуть специальность
-            return new ObjectResult(speciality);
+            return new ObjectResult(discipline);
         }
  
         // Редактирование записи
         [HttpPut("update")]
-        public async Task<ActionResult<Speciality>> UpdateRecordAsync([FromBody] Speciality model)
+        public async Task<ActionResult<Speciality>> UpdateRecordAsync([FromBody] Discipline model)
         {
             // Если модель пуста == null, то выдать код ошибки - 400
             if (model == null)
-            {
                 return BadRequest("Данные введены не коректно.");
-            }
 
             // Если запись не найдена, то выдать код ошибки - 404
-            if (!_dbContext.Specialitys.Any(x => x.SpecialityId == model.SpecialityId))
-            {
+            if (!_dbContext.Disciplines.Any(x => x.DisciplineId == model.DisciplineId))
                 return NotFound("Запись, которую Вы хотите изменить не найдена");
-            }
 
             // Изменение даннхы
             _dbContext.Update(model);
+            
             // Сохранение базы данных
             await _dbContext.SaveChangesAsync();
+            
             // Вернуть код ответ 200 - запись изменена и модель
             return Ok(model);
         }
  
         // Удаление записи
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<Speciality>> DeleteRecordAsync(int id)
+        public async Task<ActionResult<Discipline>> DeleteRecordAsync(int id)
         {
-            Speciality speciality = _dbContext.Specialitys.FirstOrDefault(x => x.SpecialityId == id);
+            Discipline discipline = _dbContext.Disciplines.FirstOrDefault(x => x.DisciplineId == id);
              // Если запись не найдена, то выдать код ошибки - 404
-            if (speciality == null)
+            if (discipline == null)
             {
                 return NotFound("Запись, которую Вы хотите удалить не найдена.");
             }
             // Удаление записи
-            _dbContext.Specialitys.Remove(speciality);
+            _dbContext.Disciplines.Remove(discipline);
+
             // Сохарнение базы данных
             await _dbContext.SaveChangesAsync();
+            
             // Вернуть код ответ 200 - запись удалена и удаленную специальность
-            return Ok(speciality);
+            return Ok(discipline);
         }
     }
 }
