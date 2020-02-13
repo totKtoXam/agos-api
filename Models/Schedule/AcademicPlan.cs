@@ -1,5 +1,6 @@
 using agos_api.Models.Organizations;
 using agos_api.Models.Studying;
+using Microsoft.AspNetCore.Http;
 
 namespace agos_api.Models.Schedule
 {
@@ -9,10 +10,14 @@ namespace agos_api.Models.Schedule
 
         public Semestr Semestr { get; set; }                    // Ссылка на Semestr (информация о семестре)
 
-        public Speciality Speciality { get; set; }              // Ссылка на Speciality (Специальность/факультет)
-
         public DisciplineSpecial DisciplineSpecial { get; set; }// Ссылка на DisciplineSpecial (Дисциплина/предмет обучения для специальности/факультет)
         
         public string AllHours { get; set; }                    // Общее количество часов обучения по определенной дисциплине за весь семестр
+    }
+
+    public class AcademicPlanViewModel
+    {
+        public Semestr Semestr { get; set; }
+        public IFormFile acPlanfile { get; set; }
     }
 }

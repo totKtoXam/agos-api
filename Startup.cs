@@ -51,6 +51,7 @@ namespace agos_api
 
             services.AddTransient<IAccountHelper, AccountHelper>();
             services.AddTransient<IEmailHelper, EmailHelper>();
+            services.AddTransient<IDisciplineHelper, DisciplineHelper>();
             services.AddScoped<IEmailServices, EmailServices>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

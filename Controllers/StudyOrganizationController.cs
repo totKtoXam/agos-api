@@ -72,7 +72,7 @@ namespace agos_api.Controllers
             return Ok(model);
         }
  
-        // DELETE api/users/5
+        // DELETE api/users/{id}
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Speciality>> DeleteRecordAsyns(int id)
         {
