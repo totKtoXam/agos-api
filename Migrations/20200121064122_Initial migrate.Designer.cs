@@ -329,7 +329,7 @@ namespace AGoS_api.Migrations
 
                     b.HasKey("SpecialityId");
 
-                    b.ToTable("Specialitys");
+                    b.ToTable("Specialities");
                 });
 
             modelBuilder.Entity("agos_api.Models.SpecialityOtdel", b =>

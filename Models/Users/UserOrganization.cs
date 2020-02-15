@@ -1,7 +1,7 @@
 using agos_api.Models.Base;
 using agos_api.Models.Organizations;
 
-namespace agos_api.Models.Organizations.PersonOrg
+namespace agos_api.Models.Users
 {
     public class UserOrganization
     {

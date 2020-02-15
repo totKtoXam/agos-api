@@ -97,9 +97,9 @@ namespace AGoS_api.Migrations
                 {
                     table.PrimaryKey("PK_Semestrs", x => x.SemestrId);
                     table.ForeignKey(
-                        name: "FK_Semestrs_Specialitys_SpecialityId",
+                        name: "FK_Semestrs_Specialities_SpecialityId",
                         column: x => x.SpecialityId,
-                        principalTable: "Specialitys",
+                        principalTable: "Specialities",
                         principalColumn: "SpecialityId",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -256,9 +256,9 @@ namespace AGoS_api.Migrations
                         principalColumn: "SemestrId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AcademicPlans_Specialitys_SpecialityId",
+                        name: "FK_AcademicPlans_Specialities_SpecialityId",
                         column: x => x.SpecialityId,
-                        principalTable: "Specialitys",
+                        principalTable: "Specialities",
                         principalColumn: "SpecialityId",
                         onDelete: ReferentialAction.Restrict);
                 });

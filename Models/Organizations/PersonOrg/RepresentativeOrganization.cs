@@ -13,5 +13,6 @@ namespace agos_api.Models.Organizations.PersonOrg
         public string MobilePhone { get; set; } // Мобильные номер телефона
         public string PositionWork { get; set; }// Должность представителя в учебной организации
         public string Email { get; set; }       // Эл. почта
+        public StudyOrganization StudyOrganization { get; set; }
     }
 }

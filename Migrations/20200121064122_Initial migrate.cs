@@ -80,7 +80,7 @@ namespace AGoS_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specialitys",
+                name: "Specialities",
                 columns: table => new
                 {
                     SpecialityId = table.Column<int>(nullable: false)
@@ -90,7 +90,7 @@ namespace AGoS_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Specialitys", x => x.SpecialityId);
+                    table.PrimaryKey("PK_Specialities", x => x.SpecialityId);
                 });
 
             migrationBuilder.CreateTable(
@@ -283,9 +283,9 @@ namespace AGoS_api.Migrations
                         principalColumn: "OtdelId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SpecialityOtdels_Specialitys_SpecialityId",
+                        name: "FK_SpecialityOtdels_Specialities_SpecialityId",
                         column: x => x.SpecialityId,
-                        principalTable: "Specialitys",
+                        principalTable: "Specialities",
                         principalColumn: "SpecialityId",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -457,7 +457,7 @@ namespace AGoS_api.Migrations
                 name: "Otdels");
 
             migrationBuilder.DropTable(
-                name: "Specialitys");
+                name: "Specialities");
         }
     }
 }

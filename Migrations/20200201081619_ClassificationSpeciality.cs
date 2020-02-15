@@ -31,11 +31,11 @@ namespace AGoS_api.Migrations
 
             migrationBuilder.DropColumn(
                 name: "Speciality_Classifier",
-                table: "Specialitys");
+                table: "Specialities");
 
             migrationBuilder.DropColumn(
                 name: "Speciality_Name",
-                table: "Specialitys");
+                table: "Specialities");
 
             migrationBuilder.DropColumn(
                 name: "SpecialityOtdelId",
@@ -47,12 +47,12 @@ namespace AGoS_api.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "SpecialityClassifier",
-                table: "Specialitys",
+                table: "Specialities",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "SpecialityName",
-                table: "Specialitys",
+                table: "Specialities",
                 nullable: true);
 
             migrationBuilder.AddColumn<int>(
@@ -80,7 +80,7 @@ namespace AGoS_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClassificationSpecialitys",
+                name: "ClassificationSpecialities",
                 columns: table => new
                 {
                     ClassificationSpecialityId = table.Column<int>(nullable: false)
@@ -90,17 +90,17 @@ namespace AGoS_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClassificationSpecialitys", x => x.ClassificationSpecialityId);
+                    table.PrimaryKey("PK_ClassificationSpecialities", x => x.ClassificationSpecialityId);
                     table.ForeignKey(
-                        name: "FK_ClassificationSpecialitys_Classifications_ClassificationId",
+                        name: "FK_ClassificationSpecialities_Classifications_ClassificationId",
                         column: x => x.ClassificationId,
                         principalTable: "Classifications",
                         principalColumn: "ClassificationId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ClassificationSpecialitys_Specialitys_SpecialityId",
+                        name: "FK_ClassificationSpecialities_Specialities_SpecialityId",
                         column: x => x.SpecialityId,
-                        principalTable: "Specialitys",
+                        principalTable: "Specialities",
                         principalColumn: "SpecialityId",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -116,28 +116,28 @@ namespace AGoS_api.Migrations
                 column: "ClassificationSpecialityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassificationSpecialitys_ClassificationId",
-                table: "ClassificationSpecialitys",
+                name: "IX_ClassificationSpecialities_ClassificationId",
+                table: "ClassificationSpecialities",
                 column: "ClassificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassificationSpecialitys_SpecialityId",
-                table: "ClassificationSpecialitys",
+                name: "IX_ClassificationSpecialities_SpecialityId",
+                table: "ClassificationSpecialities",
                 column: "SpecialityId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_DisciplineSpecials_ClassificationSpecialitys_Classification~",
+                name: "FK_DisciplineSpecials_ClassificationSpecialities_Classification~",
                 table: "DisciplineSpecials",
                 column: "ClassificationSpecialityId",
-                principalTable: "ClassificationSpecialitys",
+                principalTable: "ClassificationSpecialities",
                 principalColumn: "ClassificationSpecialityId",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Groups_ClassificationSpecialitys_ClassificationSpecialityId",
+                name: "FK_Groups_ClassificationSpecialities_ClassificationSpecialityId",
                 table: "Groups",
                 column: "ClassificationSpecialityId",
-                principalTable: "ClassificationSpecialitys",
+                principalTable: "ClassificationSpecialities",
                 principalColumn: "ClassificationSpecialityId",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -145,15 +145,15 @@ namespace AGoS_api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_DisciplineSpecials_ClassificationSpecialitys_Classification~",
+                name: "FK_DisciplineSpecials_ClassificationSpecialities_Classification~",
                 table: "DisciplineSpecials");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Groups_ClassificationSpecialitys_ClassificationSpecialityId",
+                name: "FK_Groups_ClassificationSpecialities_ClassificationSpecialityId",
                 table: "Groups");
 
             migrationBuilder.DropTable(
-                name: "ClassificationSpecialitys");
+                name: "ClassificationSpecialities");
 
             migrationBuilder.DropTable(
                 name: "Classifications");
@@ -168,11 +168,11 @@ namespace AGoS_api.Migrations
 
             migrationBuilder.DropColumn(
                 name: "SpecialityClassifier",
-                table: "Specialitys");
+                table: "Specialities");
 
             migrationBuilder.DropColumn(
                 name: "SpecialityName",
-                table: "Specialitys");
+                table: "Specialities");
 
             migrationBuilder.DropColumn(
                 name: "ClassificationSpecialityId",
@@ -184,13 +184,13 @@ namespace AGoS_api.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "Speciality_Classifier",
-                table: "Specialitys",
+                table: "Specialities",
                 type: "text",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "Speciality_Name",
-                table: "Specialitys",
+                table: "Specialities",
                 type: "text",
                 nullable: true);
 
@@ -238,9 +238,9 @@ namespace AGoS_api.Migrations
                         principalColumn: "OtdelId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SpecialityOtdels_Specialitys_SpecialityId",
+                        name: "FK_SpecialityOtdels_Specialities_SpecialityId",
                         column: x => x.SpecialityId,
-                        principalTable: "Specialitys",
+                        principalTable: "Specialities",
                         principalColumn: "SpecialityId",
                         onDelete: ReferentialAction.Restrict);
                 });

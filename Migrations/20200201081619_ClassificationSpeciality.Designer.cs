@@ -562,7 +562,7 @@ namespace AGoS_api.Migrations
 
                     b.HasIndex("SpecialityId");
 
-                    b.ToTable("ClassificationSpecialitys");
+                    b.ToTable("ClassificationSpecialities");
                 });
 
             modelBuilder.Entity("agos_api.Models.Studying.Discipline", b =>
@@ -654,7 +654,7 @@ namespace AGoS_api.Migrations
 
                     b.HasKey("SpecialityId");
 
-                    b.ToTable("Specialitys");
+                    b.ToTable("Specialities");
                 });
 
             modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>

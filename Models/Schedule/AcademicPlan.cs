@@ -13,11 +13,13 @@ namespace agos_api.Models.Schedule
         public DisciplineSpecial DisciplineSpecial { get; set; }// Ссылка на DisciplineSpecial (Дисциплина/предмет обучения для специальности/факультет)
         
         public string AllHours { get; set; }                    // Общее количество часов обучения по определенной дисциплине за весь семестр
+        public StudyOrganization StudyOrganization { get; set; }
     }
 
     public class AcademicPlanViewModel
     {
         public Semestr Semestr { get; set; }
         public IFormFile acPlanfile { get; set; }
+        public StudyOrganization StudyOrganization { get; set; }
     }
 }

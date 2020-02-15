@@ -45,7 +45,7 @@ namespace agos_api.Helpers
                 {
                     foreach(var specId in disciplineSpec.SpecialityIdList)
                     {
-                        var speciality = await _dbContext.Specialitys.FirstOrDefaultAsync(x => x.SpecialityId == specId);
+                        var speciality = await _dbContext.Specialities.FirstOrDefaultAsync(x => x.SpecialityId == specId);
                         if (speciality != null)
                         {
                             var discipline = await _dbContext.Disciplines.FirstOrDefaultAsync(x => x.Classifier == disciplineSpec.Classifier);

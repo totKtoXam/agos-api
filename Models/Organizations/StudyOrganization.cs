@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 using agos_api.Models.Organizations.PersonOrg;
@@ -28,7 +29,6 @@ namespace agos_api.Models.Organizations
                 this.City = city;
                 this.Phone = phone;
                 this.Key = key;
-               
         }
         [Key]
         public int StudyOrganizationId { get; set; }    // Id учебной организации
@@ -39,9 +39,9 @@ namespace agos_api.Models.Organizations
         public string City { get; set; }                // Город в котором находится учебная организация
         public string Phone { get; set; }               // Городской номер учебной организации
     
-        #nullable enable
-        public RepresentativeOrganization? RepresentativeOrganization { get; set; }  //  Ссылка на представителя учебной организации
-        #nullable enable
+#nullable enable
         public string? Key { get; set; }                 // Ключ учебной организации для получения доступа к определенынм информациям
+#nullable disable
+        public DateTime SignDate { get; set; }
     }
 }

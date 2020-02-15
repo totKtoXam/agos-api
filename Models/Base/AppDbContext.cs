@@ -51,32 +51,40 @@ namespace agos_api.Models.Base
             
    
         #region USERS
-            public DbSet<Teacher> Teachers { get; set; }
             public DbSet<DevUser> DevUsers { get; set; }
+            public DbSet<UserOrganization> UserOrganizations { get; set; }
         #endregion
 
         #region Organizations
-            public DbSet<UserOrganization> UserOrganizations { get; set; }
-            public DbSet<Classroom> Classrooms { get; set; } 
+            #region PersonOrg
+                public DbSet<Teacher> Teachers { get; set; }
+                public DbSet <RepresentativeOrganization> RepresentativeOrganizations { get; set; }
+            #endregion
             public DbSet<ClassroomOfTeacher> ClassroomOfTeachers { get; set; }
-            public DbSet<Group> Groups { get; set; }
-            public DbSet<Speciality> Specialitys { get; set; }
-            public DbSet<Semestr> Semestrs { get; set; }
             public DbSet<StudyOrganization> StudyOrganizations { get; set; }
             public DbSet <TeachDiscip> TeachDiscips { get; set; } 
-            public DbSet <RepresentativeOrganization> RepresentativeOrganizations { get; set; }
         #endregion
         
         #region Schedule
             public DbSet<AcademicPlan> AcademicPlans { get; set; }
+            public DbSet<Semestr> Semestrs { get; set; }
         #endregion
-        public DbSet<Discipline> Disciplines { get; set; }
-        public DbSet<DisciplineSpecial> DisciplineSpecials { get; set; }
+
+        #region StaticData
+            public DbSet<Language> Languages { get; set; }
+            public DbSet<TypeLesson> TypeLessons { get; set; }
+            public DbSet<TypeWeek> TypeWeeks { get; set; }
+            public DbSet<WeekDay> WeekDays { get; set; }
+        #endregion
+
+        #region  Studying
+            public DbSet<Classification> Classifications { get; set; }
+            public DbSet<Discipline> Disciplines { get; set; }
+            public DbSet<DisciplineSpecial> DisciplineSpecials { get; set; }
+            public DbSet<Group> Groups { get; set; }
+            public DbSet<Speciality> Specialities { get; set; }
+        #endregion
+
         public DbSet<HolidayCalendar> HolidayCalendars { get; set; }
-        public DbSet<Classification> Classifications { get; set; }
-        // public DbSet<ClassificationSpeciality> ClassificationSpecialitys { get; set; }
-        public DbSet<TypeLesson> TypeLessons { get; set; }
-        public DbSet<TypeWeek> TypeWeeks { get; set; }
-        public DbSet<WeekDay> WeekDays { get; set; }
     }
 }

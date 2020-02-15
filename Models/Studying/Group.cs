@@ -1,3 +1,6 @@
+using agos_api.Models.Organizations;
+using agos_api.Models.StaticData;
+
 namespace agos_api.Models.Studying
 {
     public class Group
@@ -7,6 +10,7 @@ namespace agos_api.Models.Studying
         public Speciality Speciality { get; set; }                                  // Ссылка на модель "Speciality"
         public short CountStudents { get; set; }                                    // Количество студентов в группе
         public short CourseNum { get; set; }                                        // Год обучения
-        public string StudyLanguage { get; set; }                                   // Язык обучения
+        public Language StudyLang { get; set; }
+        public StudyOrganization StudyOrganization { get; set; }
     }
 }

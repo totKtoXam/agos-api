@@ -10,8 +10,8 @@ using agos_api.Models.Base;
 namespace AGoS_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200213121402_RemoveSpecialityFromAcademicPlan")]
-    partial class RemoveSpecialityFromAcademicPlan
+    [Migration("20200215184458_RefreshDB")]
+    partial class RefreshDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -240,27 +240,20 @@ namespace AGoS_api.Migrations
                     b.Property<DateTime>("DateHappyEnd")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("GosHoliday")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
                     b.HasKey("HolidayCalendarId");
 
+                    b.HasIndex("StudyOrganizationId");
+
                     b.ToTable("HolidayCalendars");
-                });
-
-            modelBuilder.Entity("agos_api.Models.Organizations.Classroom", b =>
-                {
-                    b.Property<int>("ClassroomId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Number")
-                        .HasColumnType("text");
-
-                    b.HasKey("ClassroomId");
-
-                    b.ToTable("Classrooms");
                 });
 
             modelBuilder.Entity("agos_api.Models.Organizations.ClassroomOfTeacher", b =>
@@ -270,7 +263,10 @@ namespace AGoS_api.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("ClassroomId")
+                    b.Property<string>("Classroom")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("StudyOrganizationId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("TeacherId")
@@ -278,7 +274,7 @@ namespace AGoS_api.Migrations
 
                     b.HasKey("ClassroomOfTeacherId");
 
-                    b.HasIndex("ClassroomId");
+                    b.HasIndex("StudyOrganizationId");
 
                     b.HasIndex("TeacherId");
 
@@ -306,10 +302,15 @@ namespace AGoS_api.Migrations
                     b.Property<string>("PositionWork")
                         .HasColumnType("text");
 
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SurName")
                         .HasColumnType("text");
 
                     b.HasKey("ReprId");
+
+                    b.HasIndex("StudyOrganizationId");
 
                     b.ToTable("RepresentativeOrganizations");
                 });
@@ -327,32 +328,17 @@ namespace AGoS_api.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("RepresentativeOrganizationReprId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Surname")
                         .HasColumnType("text");
 
                     b.HasKey("TeacherId");
 
+                    b.HasIndex("RepresentativeOrganizationReprId");
+
                     b.ToTable("Teachers");
-                });
-
-            modelBuilder.Entity("agos_api.Models.Organizations.PersonOrg.UserOrganization", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("StudyOrganizationId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudyOrganizationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserOrganizations");
                 });
 
             modelBuilder.Entity("agos_api.Models.Organizations.StudyOrganization", b =>
@@ -380,15 +366,13 @@ namespace AGoS_api.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("RepresentativeOrganizationReprId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("ShortName")
                         .HasColumnType("text");
 
-                    b.HasKey("StudyOrganizationId");
+                    b.Property<DateTime>("SignDate")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.HasIndex("RepresentativeOrganizationReprId");
+                    b.HasKey("StudyOrganizationId");
 
                     b.ToTable("StudyOrganizations");
                 });
@@ -403,12 +387,17 @@ namespace AGoS_api.Migrations
                     b.Property<int?>("DisciplineId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("TeacherId")
                         .HasColumnType("integer");
 
                     b.HasKey("TeachDiscipId");
 
                     b.HasIndex("DisciplineId");
+
+                    b.HasIndex("StudyOrganizationId");
 
                     b.HasIndex("TeacherId");
 
@@ -431,11 +420,16 @@ namespace AGoS_api.Migrations
                     b.Property<int?>("SemestrId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
                     b.HasKey("AcademicPlanId");
 
                     b.HasIndex("DisciplineSpecialId");
 
                     b.HasIndex("SemestrId");
+
+                    b.HasIndex("StudyOrganizationId");
 
                     b.ToTable("AcademicPlans");
                 });
@@ -465,11 +459,33 @@ namespace AGoS_api.Migrations
                     b.Property<int?>("SpecialityId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
                     b.HasKey("SemestrId");
 
                     b.HasIndex("SpecialityId");
 
+                    b.HasIndex("StudyOrganizationId");
+
                     b.ToTable("Semestrs");
+                });
+
+            modelBuilder.Entity("agos_api.Models.StaticData.Language", b =>
+                {
+                    b.Property<Guid>("LangId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LangCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LanguageName")
+                        .HasColumnType("text");
+
+                    b.HasKey("LangId");
+
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("agos_api.Models.StaticData.TypeLesson", b =>
@@ -602,12 +618,19 @@ namespace AGoS_api.Migrations
                     b.Property<int?>("SpecialityId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("StudyLanguage")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("StudyLangLangId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
 
                     b.HasKey("GroupId");
 
                     b.HasIndex("SpecialityId");
+
+                    b.HasIndex("StudyLangLangId");
+
+                    b.HasIndex("StudyOrganizationId");
 
                     b.ToTable("Groups");
                 });
@@ -648,6 +671,26 @@ namespace AGoS_api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("DevUsers");
+                });
+
+            modelBuilder.Entity("agos_api.Models.Users.UserOrganization", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudyOrganizationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserOrganizations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -701,29 +744,32 @@ namespace AGoS_api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("agos_api.Models.HolidayCalendar", b =>
+                {
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
+                });
+
             modelBuilder.Entity("agos_api.Models.Organizations.ClassroomOfTeacher", b =>
                 {
-                    b.HasOne("agos_api.Models.Organizations.Classroom", "Classroom")
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
                         .WithMany()
-                        .HasForeignKey("ClassroomId");
+                        .HasForeignKey("StudyOrganizationId");
 
                     b.HasOne("agos_api.Models.Organizations.PersonOrg.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Organizations.PersonOrg.UserOrganization", b =>
+            modelBuilder.Entity("agos_api.Models.Organizations.PersonOrg.RepresentativeOrganization", b =>
                 {
-                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "studyOrganization")
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
                         .WithMany()
                         .HasForeignKey("StudyOrganizationId");
-
-                    b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Organizations.StudyOrganization", b =>
+            modelBuilder.Entity("agos_api.Models.Organizations.PersonOrg.Teacher", b =>
                 {
                     b.HasOne("agos_api.Models.Organizations.PersonOrg.RepresentativeOrganization", "RepresentativeOrganization")
                         .WithMany()
@@ -735,6 +781,10 @@ namespace AGoS_api.Migrations
                     b.HasOne("agos_api.Models.Studying.Discipline", "Discipline")
                         .WithMany()
                         .HasForeignKey("DisciplineId");
+
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
 
                     b.HasOne("agos_api.Models.Organizations.PersonOrg.Teacher", "Teacher")
                         .WithMany()
@@ -750,6 +800,10 @@ namespace AGoS_api.Migrations
                     b.HasOne("agos_api.Models.Schedule.Semestr", "Semestr")
                         .WithMany()
                         .HasForeignKey("SemestrId");
+
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
                 });
 
             modelBuilder.Entity("agos_api.Models.Schedule.Semestr", b =>
@@ -757,6 +811,10 @@ namespace AGoS_api.Migrations
                     b.HasOne("agos_api.Models.Studying.Speciality", "Speciality")
                         .WithMany()
                         .HasForeignKey("SpecialityId");
+
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
                 });
 
             modelBuilder.Entity("agos_api.Models.Studying.Discipline", b =>
@@ -782,6 +840,14 @@ namespace AGoS_api.Migrations
                     b.HasOne("agos_api.Models.Studying.Speciality", "Speciality")
                         .WithMany()
                         .HasForeignKey("SpecialityId");
+
+                    b.HasOne("agos_api.Models.StaticData.Language", "StudyLang")
+                        .WithMany()
+                        .HasForeignKey("StudyLangLangId");
+
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
                 });
 
             modelBuilder.Entity("agos_api.Models.Studying.Speciality", b =>
@@ -793,6 +859,17 @@ namespace AGoS_api.Migrations
 
             modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
                 {
+                    b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("agos_api.Models.Users.UserOrganization", b =>
+                {
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "studyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
+
                     b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

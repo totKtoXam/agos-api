@@ -33,7 +33,7 @@ namespace agos_api.Controllers
             {
                 if ((speciality != null) || !((string.IsNullOrEmpty(speciality.SpecialityClassifier)) && (string.IsNullOrEmpty(speciality.SpecialityName))))
                     // Добление записи
-                    _dbContext.Specialitys.Add(speciality);
+                    _dbContext.Specialities.Add(speciality);
                 else
                     notAddedSpecialityList.Add(speciality);
             }
@@ -50,14 +50,14 @@ namespace agos_api.Controllers
         public async Task<ActionResult<IEnumerable<Speciality>>> GetAllRecordsAsyns()
         {
             // Вернуть список записей
-            return await _dbContext.Specialitys.ToListAsync();
+            return await _dbContext.Specialities.ToListAsync();
         }
 
         // Получение одной специальности по SpecialityId - идентификатору
         [HttpGet("{id}")]
         public async Task<ActionResult<Speciality>> GetSingleRecordAsync(int id)
         {
-            Speciality speciality = await _dbContext.Specialitys.FirstOrDefaultAsync(x => x.SpecialityId == id);
+            Speciality speciality = await _dbContext.Specialities.FirstOrDefaultAsync(x => x.SpecialityId == id);
             // Если запись не найдена, то выдать код ошибки - 404
             if (speciality == null)
                 return NotFound("Запись не найдена.");
@@ -76,7 +76,7 @@ namespace agos_api.Controllers
             }
 
             // Если запись не найдена, то выдать код ошибки - 404
-            if (!_dbContext.Specialitys.Any(x => x.SpecialityId == model.SpecialityId))
+            if (!_dbContext.Specialities.Any(x => x.SpecialityId == model.SpecialityId))
             {
                 return NotFound("Запись, которую Вы хотите изменить не найдена");
             }
@@ -93,14 +93,14 @@ namespace agos_api.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Speciality>> DeleteRecordAsync(int id)
         {
-            Speciality speciality = _dbContext.Specialitys.FirstOrDefault(x => x.SpecialityId == id);
+            Speciality speciality = _dbContext.Specialities.FirstOrDefault(x => x.SpecialityId == id);
              // Если запись не найдена, то выдать код ошибки - 404
             if (speciality == null)
             {
                 return NotFound("Запись, которую Вы хотите удалить не найдена.");
             }
             // Удаление записи
-            _dbContext.Specialitys.Remove(speciality);
+            _dbContext.Specialities.Remove(speciality);
             // Сохарнение базы данных
             await _dbContext.SaveChangesAsync();
             // Вернуть код ответ 200 - запись удалена и удаленную специальность

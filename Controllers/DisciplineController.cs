@@ -41,7 +41,7 @@ namespace agos_api.Controllers
         public async Task<ActionResult<IEnumerable<Speciality>>> GetAllRecordsAsyns()
         {
             // Вернуть список записей
-            return await _dbContext.Specialitys.ToListAsync();
+            return await _dbContext.Specialities.ToListAsync();
         }
 
         // Получение одной специальности по SpecialityId - идентификатору

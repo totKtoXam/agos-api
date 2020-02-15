@@ -1,4 +1,5 @@
 using System;
+using agos_api.Models.Organizations;
 using agos_api.Models.Studying;
 
 namespace agos_api.Models.Schedule
@@ -13,5 +14,6 @@ namespace agos_api.Models.Schedule
         public DateTime BeginOfSemestr { get; set; }    // Дата начало семестра (праздничные недели включительно)
         public DateTime FinishOfSemestr { get; set; }   // Дата конца семестра (праздничные недели включительно)
         public string HoursWeek { get; set; }           // Общее количество часов за семестр
+        public StudyOrganization StudyOrganization { get; set; }
     }
 }

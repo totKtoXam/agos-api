@@ -52,6 +52,7 @@ namespace agos_api.Helpers
                         var discipSpec = await _dbContext.DisciplineSpecials
                                                         .Include(x => x.Discipline)
                                                         .FirstOrDefaultAsync(x => x.Discipline.Classifier == classifier);
+                        
                         var academicPlan = new AcademicPlan ()
                         {
                             Semestr = model.Semestr,
