@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using agos_api.Models.Schedule;
 using agos_api.Models.Studying;
 using agos_api.Models.Organizations;
+using System.Text.RegularExpressions;
 
 namespace agos_api.Controllers
 {
@@ -25,17 +26,33 @@ namespace agos_api.Controllers
         [HttpPost("insert")]
         public async Task<IActionResult> InsertRecordAsyns([FromBody] StudyOrganization model)
         {
-            var studyOrganization = new StudyOrganization(model);
-            _dbContext.StudyOrganizations.Add(studyOrganization);
-            await _dbContext.SaveChangesAsync();
-            studyOrganization.Key = StudyOrganizationHelper.KeyGenerate(
-                    studyOrganization.StudyOrganizationId, 
-                    studyOrganization.ShortName, 
-                    studyOrganization.City
-                );
-            _dbContext.Update(studyOrganization);
-            await _dbContext.SaveChangesAsync();
-            return Ok(studyOrganization);
+            if (ModelState.IsValid)
+            {
+                if (string.IsNullOrEmpty(model.BIN) || model.BIN.Length != 12)
+                    return BadRequest("BIN_IS_WRONG");
+
+                // var foundStudyOrg = _dbContext.StudyOrganizations.Any(x => x.BIN == model.BIN);
+
+                model.BIN = Regex.Replace(model.BIN, "[^0-9]", "");
+                if (_dbContext.StudyOrganizations.Any(x => x.BIN == model.BIN))
+                    return BadRequest("BIN_IS_DUPLICATE");
+
+                var studyOrganization = new StudyOrganization(model);
+                _dbContext.StudyOrganizations.Add(studyOrganization);
+                await _dbContext.SaveChangesAsync();
+                studyOrganization.Key = StudyOrganizationHelper.KeyGenerate(
+                        studyOrganization.StudyOrganizationId, 
+                        studyOrganization.ShortName, 
+                        studyOrganization.City
+                    );
+                _dbContext.Update(studyOrganization);
+                await _dbContext.SaveChangesAsync();
+                return Ok(studyOrganization);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("getall")]

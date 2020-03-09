@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using agos_api.Models.Base;
@@ -9,9 +10,10 @@ using agos_api.Models.Base;
 namespace AGoS_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200301144856_ModifiedDataBase 3 v")]
+    partial class ModifiedDataBase3v
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -347,8 +349,7 @@ namespace AGoS_api.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("BIN")
-                        .HasColumnType("character varying(12)")
-                        .HasMaxLength(12);
+                        .HasColumnType("text");
 
                     b.Property<string>("City")
                         .HasColumnType("text");
@@ -386,12 +387,17 @@ namespace AGoS_api.Migrations
                     b.Property<int?>("DisciplineId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("StudyOrganizationId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("TeacherId")
                         .HasColumnType("integer");
 
                     b.HasKey("TeachDiscipId");
 
                     b.HasIndex("DisciplineId");
+
+                    b.HasIndex("StudyOrganizationId");
 
                     b.HasIndex("TeacherId");
 
@@ -408,7 +414,7 @@ namespace AGoS_api.Migrations
                     b.Property<string>("AllHours")
                         .HasColumnType("text");
 
-                    b.Property<int?>("DisciplineSpecialDisciplineClassificId")
+                    b.Property<int?>("DisciplineSpecialId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("SemestrId")
@@ -419,7 +425,7 @@ namespace AGoS_api.Migrations
 
                     b.HasKey("AcademicPlanId");
 
-                    b.HasIndex("DisciplineSpecialDisciplineClassificId");
+                    b.HasIndex("DisciplineSpecialId");
 
                     b.HasIndex("SemestrId");
 
@@ -576,26 +582,26 @@ namespace AGoS_api.Migrations
                     b.ToTable("Disciplines");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Studying.DisciplineClassific", b =>
+            modelBuilder.Entity("agos_api.Models.Studying.DisciplineSpecial", b =>
                 {
-                    b.Property<int>("DisciplineClassificId")
+                    b.Property<int>("DisciplineSpecialId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("ClassificationId")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("DisciplineId")
                         .HasColumnType("integer");
 
-                    b.HasKey("DisciplineClassificId");
+                    b.Property<int?>("SpecialityId")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("ClassificationId");
+                    b.HasKey("DisciplineSpecialId");
 
                     b.HasIndex("DisciplineId");
 
-                    b.ToTable("DisciplineClassifics");
+                    b.HasIndex("SpecialityId");
+
+                    b.ToTable("DisciplineSpecials");
                 });
 
             modelBuilder.Entity("agos_api.Models.Studying.Group", b =>
@@ -654,16 +660,15 @@ namespace AGoS_api.Migrations
 
             modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
                 {
-                    b.Property<string>("DevUserId")
+                    b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<string>("IIN")
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Position")
-                        .HasColumnType("text");
+                    b.HasKey("Id");
 
-                    b.HasKey("DevUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("DevUsers");
                 });
@@ -779,6 +784,10 @@ namespace AGoS_api.Migrations
                         .WithMany()
                         .HasForeignKey("DisciplineId");
 
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                        .WithMany()
+                        .HasForeignKey("StudyOrganizationId");
+
                     b.HasOne("agos_api.Models.Organizations.PersonOrg.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
@@ -786,9 +795,9 @@ namespace AGoS_api.Migrations
 
             modelBuilder.Entity("agos_api.Models.Schedule.AcademicPlan", b =>
                 {
-                    b.HasOne("agos_api.Models.Studying.DisciplineClassific", "DisciplineSpecial")
+                    b.HasOne("agos_api.Models.Studying.DisciplineSpecial", "DisciplineSpecial")
                         .WithMany()
-                        .HasForeignKey("DisciplineSpecialDisciplineClassificId");
+                        .HasForeignKey("DisciplineSpecialId");
 
                     b.HasOne("agos_api.Models.Schedule.Semestr", "Semestr")
                         .WithMany()
@@ -824,15 +833,15 @@ namespace AGoS_api.Migrations
                         .HasForeignKey("TypeLessonId");
                 });
 
-            modelBuilder.Entity("agos_api.Models.Studying.DisciplineClassific", b =>
+            modelBuilder.Entity("agos_api.Models.Studying.DisciplineSpecial", b =>
                 {
-                    b.HasOne("agos_api.Models.Studying.Classification", "Classification")
-                        .WithMany()
-                        .HasForeignKey("ClassificationId");
-
                     b.HasOne("agos_api.Models.Studying.Discipline", "Discipline")
                         .WithMany()
                         .HasForeignKey("DisciplineId");
+
+                    b.HasOne("agos_api.Models.Studying.Speciality", "Speciality")
+                        .WithMany()
+                        .HasForeignKey("SpecialityId");
                 });
 
             modelBuilder.Entity("agos_api.Models.Studying.Group", b =>
@@ -850,9 +859,16 @@ namespace AGoS_api.Migrations
                         .HasForeignKey("StudyOrganizationId");
                 });
 
+            modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
+                {
+                    b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("agos_api.Models.Users.UserOrganization", b =>
                 {
-                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "studyOrganization")
                         .WithMany()
                         .HasForeignKey("StudyOrganizationId");
 

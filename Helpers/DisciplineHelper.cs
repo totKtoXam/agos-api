@@ -24,42 +24,50 @@ namespace agos_api.Helpers
 
         public async Task<List<DisciplineSpecialityViewModel>> AddDisciplineWithDiscSpecAsync(List<DisciplineSpecialityViewModel> model)
         {
-            foreach(var discipline in model)
+            int savedCound = 0;
+            foreach (var item in model)
             {
-                if (discipline != null)
+                if (!string.IsNullOrEmpty(item.Classifier) && !string.IsNullOrEmpty(item.Name))
                 {
-                    await _dbContext.Disciplines.AddAsync(new Discipline{
-                        Name = discipline.Name,
-                        TypeLesson = discipline.TypeLesson,
-                        Classifier = discipline.Classifier
-                    });
-                }
-            }
-            
-            // Сохранение базы данных
-            await _dbContext.SaveChangesAsync();
-
-            foreach(var disciplineSpec in model)
-            {
-                if (disciplineSpec.SpecialityIdList != null)
-                {
-                    foreach(var specId in disciplineSpec.SpecialityIdList)
+                    var typeLesson = await _dbContext.TypeLessons.FirstOrDefaultAsync(x => x.TypeLessonId == item.TypeLesson.TypeLessonId);
+                    if (typeLesson != null)
                     {
-                        var speciality = await _dbContext.Specialities.FirstOrDefaultAsync(x => x.SpecialityId == specId);
-                        if (speciality != null)
+                        var discipline = new Discipline();
+                        discipline.Name = item.Name;
+                        discipline.Classifier = item.Classifier;
+                        discipline.TypeLesson = typeLesson;
+                        if (item.ClassificationIdList.Count() > 0)
                         {
-                            var discipline = await _dbContext.Disciplines.FirstOrDefaultAsync(x => x.Classifier == disciplineSpec.Classifier);
-                            await _dbContext.DisciplineSpecials.AddAsync(new DisciplineSpecial{
-                                Discipline = discipline,
-                                Speciality = speciality
-                            });
+                            foreach(var classificationId in item.ClassificationIdList)
+                            {
+                                var classification = await _dbContext.Classifications.FirstOrDefaultAsync(x => x.ClassificationId == classificationId);
+                                if (classification != null)
+                                {
+
+                                    var discipClassific = new DisciplineClassific();
+                                    discipClassific.Classification = classification;
+                                    discipClassific.Discipline = discipline;
+
+                                    await _dbContext.DisciplineClassifics.AddAsync(discipClassific);
+                                    savedCound ++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            await _dbContext.Disciplines.AddAsync(discipline);
                         }
                     }
                 }
             }
 
-            await _dbContext.SaveChangesAsync();
-            return model;
+            if (savedCound > 0)
+            {
+                await _dbContext.SaveChangesAsync();
+                return model;
+            }
+            else
+                return null;
         }
     }
 }

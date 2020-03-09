@@ -9,6 +9,6 @@ namespace agos_api.Models.Organizations
         public int TeachDiscipId { get; set; }      // Id Преподателя дисциплины
         public Discipline Discipline { get; set; }  // Ссылка на Discipline (дисциплина/предмет обучения), который преподает учитель/преподаватель
         public Teacher Teacher { get; set; }        // Ссылка на Teacher (учитель/преподаватель), который преподает выбранную дисциплину/предмет обучения
-        public StudyOrganization StudyOrganization { get; set; }
+        // public StudyOrganization StudyOrganization { get; set; }
     }
 }

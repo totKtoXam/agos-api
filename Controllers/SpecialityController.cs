@@ -7,6 +7,7 @@ using agos_api.Models.Base;
 using System.Threading.Tasks;
 using agos_api.Models.Studying;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace agos_api.Controllers
 {
@@ -27,71 +28,107 @@ namespace agos_api.Controllers
             if(specialityList == null)
                 return BadRequest();
 
-            List<Speciality> notAddedSpecialityList = new List<Speciality>();
+            List<Speciality> notAddedList = new List<Speciality>();
+            List<Speciality> addedList = new List<Speciality>();
 
             foreach(var speciality in specialityList)
             {
-                if ((speciality != null) || !((string.IsNullOrEmpty(speciality.SpecialityClassifier)) && (string.IsNullOrEmpty(speciality.SpecialityName))))
-                    // Добление записи
-                    _dbContext.Specialities.Add(speciality);
+                // if (speciality.GetType() == typeof(Speciality))
+                // {
+                //     Console.WriteLine("THIS IS SPECIALITY!");
+                // }
+                
+                if (ModelState.IsValid)
+                {
+                    if (!_dbContext.Specialities.Any(x => x.SpecialityClassifier == speciality.SpecialityClassifier))
+                    {
+                        // Добление записи
+                        _dbContext.Specialities.Add(speciality);
+                        addedList.Add(speciality);
+                    }
+                    else
+                        notAddedList.Add(speciality);
+                }
                 else
-                    notAddedSpecialityList.Add(speciality);
+                    notAddedList.Add(speciality);
             }
             
             // Сохранение базы данных
             await _dbContext.SaveChangesAsync();
 
             // Выдать код ответа 200 - запись сохранена
-            return Ok(notAddedSpecialityList);
+            return Ok(new {
+                addedList,
+                notAddedList
+            });
         }
 
         // Получение списка всех записей
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Speciality>>> GetAllRecordsAsyns()
+        public async Task<ActionResult> GetAllRecordsAsyns()
         {
+            var specialitys = await _dbContext.Specialities.ToListAsync();
             // Вернуть список записей
-            return await _dbContext.Specialities.ToListAsync();
+            return Ok(specialitys);
         }
 
         // Получение одной специальности по SpecialityId - идентификатору
         [HttpGet("{id}")]
-        public async Task<ActionResult<Speciality>> GetSingleRecordAsync(int id)
+        public async Task<ActionResult> GetSingleRecordAsync(int id)
         {
             Speciality speciality = await _dbContext.Specialities.FirstOrDefaultAsync(x => x.SpecialityId == id);
             // Если запись не найдена, то выдать код ошибки - 404
             if (speciality == null)
                 return NotFound("Запись не найдена.");
             // Вернуть специальность
-            return new ObjectResult(speciality);
+            return Ok(speciality);
         }
  
         // Редактирование записи
         [HttpPut("update")]
-        public async Task<ActionResult<Speciality>> UpdateRecordAsync([FromBody] Speciality model)
+        public async Task<ActionResult<Speciality>> UpdateRecordAsync([FromBody] List<Speciality> specialityList)
         {
-            // Если модель пуста == null, то выдать код ошибки - 400
-            if (model == null)
-            {
-                return BadRequest("Данные введены не коректно.");
-            }
+            if(specialityList == null)
+                return BadRequest();
 
-            // Если запись не найдена, то выдать код ошибки - 404
-            if (!_dbContext.Specialities.Any(x => x.SpecialityId == model.SpecialityId))
-            {
-                return NotFound("Запись, которую Вы хотите изменить не найдена");
-            }
+            List<Speciality> notUpdatedList = new List<Speciality>();
+            List<Speciality> updatedList = new List<Speciality>();
 
-            // Изменение даннхы
-            _dbContext.Update(model);
+            foreach(var speciality in specialityList)
+            {
+                // if (speciality.GetType() == typeof(Speciality))
+                // {
+                //     Console.WriteLine("THIS IS SPECIALITY!");
+                // }
+                
+                if (ModelState.IsValid)
+                {
+                    if (_dbContext.Specialities.Any(x => x.SpecialityId == speciality.SpecialityId))
+                    {
+                        // Изменение данных записи
+                        _dbContext.Update(speciality);
+                        updatedList.Add(speciality);
+                    }
+                    else
+                        notUpdatedList.Add(speciality);
+                }
+                else
+                    notUpdatedList.Add(speciality);
+            }
+            
             // Сохранение базы данных
             await _dbContext.SaveChangesAsync();
-            // Вернуть код ответ 200 - запись изменена и модель
-            return Ok(model);
+
+            // Выдать код ответа 200 - запись сохранена
+            return Ok(new {
+                updatedList,
+                notUpdatedList
+            });
         }
  
         // Удаление записи
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<Speciality>> DeleteRecordAsync(int id)
+        public async Task<ActionResult> DeleteRecordAsync(int id)
         {
             Speciality speciality = _dbContext.Specialities.FirstOrDefault(x => x.SpecialityId == id);
              // Если запись не найдена, то выдать код ошибки - 404

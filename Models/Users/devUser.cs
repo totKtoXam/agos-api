@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using agos_api.Models.Base;
 
 namespace agos_api.Models.Users
@@ -7,10 +8,12 @@ namespace agos_api.Models.Users
         public DevUser(){}
         public DevUser(ApplicationUser _user)
         {
-            Id = _user.Id;
-            User = _user;
+            DevUserId = _user.Id;
         }
-        public string Id { get; set; }              // Id пользователя из группы DevUser - администрация системы
-        public ApplicationUser User { get; set; }   // Ссылка на пользователя из общей таблицы пользователей
+        [Key]
+        public string DevUserId { get; set; }
+        // public ApplicationUser User { get; set; }   // Ссылка на пользователя из общей таблицы пользователей
+        public string IIN { get; set; }
+        public string Position { get; set; }
     }
 }

@@ -20,6 +20,16 @@ namespace agos_api.Models.Base
          protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<StudyOrganization>()
+                    .HasMany(t => t.Teachers)
+                    .WithOne(so => so.StudyOrganization)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+            // builder.Entity<Classroom>()
+            //     .HasNoKey();
+            // builder.Entity<Classification>()
+            //         .HasOne(c => c.Speciality);
             // builder.Entity<WeekDay>()
             //     .Property(b => b.FullDayName)
             //     .HasConversion(
@@ -80,7 +90,7 @@ namespace agos_api.Models.Base
         #region  Studying
             public DbSet<Classification> Classifications { get; set; }
             public DbSet<Discipline> Disciplines { get; set; }
-            public DbSet<DisciplineSpecial> DisciplineSpecials { get; set; }
+            public DbSet<DisciplineClassific> DisciplineClassifics { get; set; }
             public DbSet<Group> Groups { get; set; }
             public DbSet<Speciality> Specialities { get; set; }
         #endregion

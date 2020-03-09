@@ -52,6 +52,7 @@ namespace agos_api
             services.AddTransient<IAccountHelper, AccountHelper>();
             services.AddTransient<IEmailHelper, EmailHelper>();
             services.AddTransient<IDisciplineHelper, DisciplineHelper>();
+            services.AddTransient<IOperationHelper, OperationHelper>();
             services.AddScoped<IEmailServices, EmailServices>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -91,25 +92,28 @@ namespace agos_api
             services.AddSingleton(mapper);
             services.AddCors();
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "AGoS restAPI", Version = "v1.0" });
-            });
+            // services.AddSwaggerGen(c =>
+            // {
+            //     c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "AGoS restAPI", Version = "v1.0" });
+            // });
+            services.AddSwaggerDocumentation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "AGoS restAPI v1.0");
-                c.RoutePrefix = string.Empty;
-            });
+            // app.UseSwagger();
+            // app.UseSwaggerUI(c =>
+            // {
+            //     c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "AGoS restAPI v1.0");
+            //     // c.RoutePrefix = string.Empty;
+            //     c.RoutePrefix = "api";
+            // });
             
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwaggerDocumentation();
             }
             app.UseHttpsRedirection();
             

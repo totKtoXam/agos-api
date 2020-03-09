@@ -49,7 +49,7 @@ namespace agos_api.Helpers
                         var classifier = worksheet.Cells[row, 2].Value.ToString().Trim();
                         var allHours = worksheet.Cells[row, 3].Value.ToString().Trim();
 
-                        var discipSpec = await _dbContext.DisciplineSpecials
+                        var discipSpec = await _dbContext.DisciplineClassifics
                                                         .Include(x => x.Discipline)
                                                         .FirstOrDefaultAsync(x => x.Discipline.Classifier == classifier);
                         

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using agos_api.Models.Base;
@@ -9,9 +10,10 @@ using agos_api.Models.Base;
 namespace AGoS_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200308113402_DiscipSpec renamed to DiscipClassific")]
+    partial class DiscipSpecrenamedtoDiscipClassific
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -654,16 +656,15 @@ namespace AGoS_api.Migrations
 
             modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
                 {
-                    b.Property<string>("DevUserId")
+                    b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<string>("IIN")
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Position")
-                        .HasColumnType("text");
+                    b.HasKey("Id");
 
-                    b.HasKey("DevUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("DevUsers");
                 });
@@ -850,9 +851,16 @@ namespace AGoS_api.Migrations
                         .HasForeignKey("StudyOrganizationId");
                 });
 
+            modelBuilder.Entity("agos_api.Models.Users.DevUser", b =>
+                {
+                    b.HasOne("agos_api.Models.Base.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("agos_api.Models.Users.UserOrganization", b =>
                 {
-                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "StudyOrganization")
+                    b.HasOne("agos_api.Models.Organizations.StudyOrganization", "studyOrganization")
                         .WithMany()
                         .HasForeignKey("StudyOrganizationId");
 
